@@ -23,9 +23,13 @@ export class GameObject {
         }
     }
     moveTo = (location) => {
+        if (location == this.parent) {
+            return false;
+        }
         this.delete();
         location.push(this);
         this.parent = location;
+        return true;
     }
 };
 

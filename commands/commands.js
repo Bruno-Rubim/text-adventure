@@ -15,7 +15,7 @@ const findObjectArea = (container, condition) => {
     if (container.content != null){
         for (let i = 0; i < container.content.length; i++) {
             if (condition(container.content[i])){
-                return container.content[i];;
+                return container.content[i];
             }
         }
         for (let i = 0; i < container.content.length; i++) {
@@ -132,7 +132,7 @@ export const take = new Command({
             terminal.writeInWarning("Take what?");
             return;
         }
-        let solvedWords = solveWords(words, findObjectArea);
+        let solvedWords = solveWords(words, findObjectGeneral);
         let target = solvedWords[0];
         if (!target) {
             terminal.writeInWarning('No ' + words + ' was found');
@@ -142,11 +142,15 @@ export const take = new Command({
             terminal.writeInWarning(`You can't take that`);
             return;
         }
+        let allowed = target.moveTo(gameState.inventory);
+        if (!allowed) {
+            terminal.writeInWarning(`You already have that`);
+            return;
+        }
         terminal.writeInScreen(target.taken());
         if (!target.everSeen){
             look.execute([target.name]);
         }
-        target.moveTo(gameState.inventory);
         return;
     }
 });
