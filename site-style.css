@@ -1,0 +1,259 @@
+
+body {
+    padding: 20px;
+    background-color: #0e0c20;
+    color: white;
+    font-family: "Chakra Petch", serif;
+    background-image: url("images/icons.gif");
+    text-shadow: 0px 0px 7px #888;
+    cursor: url("/images/cursor.png"), default;
+  }
+  
+  p{
+    background-color: #000;
+  }
+  
+  img {
+    image-rendering: pixelated;
+  }
+  
+  td{
+    vertical-align: top;
+  }
+  
+  a {
+    cursor: url("/images/cursor-hand.png"), default;
+  }
+  a:link {
+    color: #00fb9c;
+    text-shadow: 0px 0px 7px #00fb9c;
+  }
+  a:visited {
+    color: #00d1af;
+    text-shadow: 0px 0px 7px #00d1af;
+  }
+  a:hover {
+    color: #a6ffcb;
+    text-shadow: 0px 0px 7px #a6ffcb;
+  }
+  a:active {
+    color: #fff;
+    text-shadow: 0px 0px 7px #fff;
+    cursor: url("/images/cursor-hand.png"), default;
+  }
+  
+  button{
+    color: white;
+    background-color: transparent;
+    border: none;
+    padding: 0px;
+    padding-inline: 0px;
+    font-family: "Chakra Petch", serif;
+    font-size: 16px;
+    cursor: url("/images/cursor-hand.png"), default;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 24px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #000; 
+  }
+   
+  ::-webkit-scrollbar-thumb {
+    background: #000; 
+    border: solid white 2px
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #fff;
+    border: solid black 2px
+  }
+  
+  .poem{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .house{
+    color: #809ce3;
+  }
+  
+  .section{
+    width: 90%;
+    margin: auto;
+  }
+  
+  .mini{
+    width: 64px;
+  }
+  
+  .hover-content {
+      display:none;
+  }
+  
+  .hover-parent:hover .hover-content {
+      display:block;
+  }
+  
+  .chill{
+    background-color: #000;
+    background-image: none;
+    text-align: center;
+    cursor: url("/images/cursor.png"), default;
+  }
+  
+  .text-adventure{
+    font-family: courier_primeregular;
+    background-color: #000;
+    background-image: none;
+    text-align: center;
+    cursor: url("/images/cursor.png"), default;
+  }
+  
+  .text-adventure input[type=text]{
+    font-family: courier_primeregular;
+    color: #fff;
+    background-color: #000;
+  }
+  
+  .book{
+    background-color: #000;
+    background-image: none;
+    text-align: center;
+    cursor: url("/images/cursor.png"), default;
+    font-family: "Kalam", cursive;
+  }
+  
+  .secret{
+    background-color: #000;
+    background-image: none;
+    color: #888;
+    font-family: monospace;
+    font-size: 13px;
+    text-shadow: 0px 0px 7px #777;
+    padding: 50px;
+    cursor: url("/images/cursor.png"), default;
+  }
+  
+  
+  .hidden{
+    color: #000;  
+    text-shadow: 0px 0px 0px #000;
+    cursor: url("/images/cursor-hidden.png"), default;
+  }
+  
+  .secret a:link {
+    color: #000;
+  }
+  
+  .waters{
+    background-color: #000;
+    background-image: none;
+    color: #888;
+    font-family: monospace;
+    font-size: 13px;
+    text-shadow: 0px 0px 7px #777;
+    padding: 50px;
+    text-align: center;
+    cursor: url("/images/cursor.png"), default;
+  }
+  
+  .waters a:link {
+    color: #016efa;
+    line-height: 19px;
+    text-shadow: 0px 0px 7px #016efa;
+  }
+  .waters a:visited {
+    color: #160cfa;
+    text-shadow: 0px 0px 7px #160cfa;
+  }
+  .waters a:hover {
+    color: #fff;
+    text-shadow: 0px 0px 7px #fff;
+  }
+  .waters a:active {
+    color: #00aaff;
+    text-shadow: 0px 0px 7px #00aaff;
+  }
+  
+  .catacomb{
+    background-color: #000;
+    background-image: none;
+    text-align: center;
+    color: #888;
+    font-family: marcellus;
+    font-size: 13px;
+    text-shadow: 0px 0px 7px #777;
+    padding: 50px;
+    cursor: url("/images/cursor.png"), default;
+  }
+  
+  .tiny{
+    font-size: 10px;
+  }
+  
+  .image-block{
+    max-width: 300px;
+    font-size: 15px;
+  }
+  
+  .album{
+    margin: 20px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .album-image{
+    width: 256px
+  }
+  
+  .album > div{
+    margin: 10px;
+    word-wrap: break-word;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  .imagesubtitle{
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .rain {
+    position: absolute;
+    top: 0%;
+    left: 15%;
+    width: 1%;
+    height: 113vh;
+    letter-spacing: 50px;
+  }
+  
+  .trunk{
+    background-image: none;
+    background-color: black;
+    font-family: "Slabo 27px", serif;
+    text-align: center;
+  }
+  
+  .trunk button{
+    font-family: monospace;
+    color: #d0f4bb;
+  }
+  
+  .popover{
+    background-color: black;
+    border: solid, 1px, white;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    line-height: 26px;
+  }
+  
+  .rage{
+    font-weight: bold;
+    color: red;
+    cursor: url("/images/cursor-rage.gif"), default;
+    text-shadow: 0px 0px 7px #f00;
+  }

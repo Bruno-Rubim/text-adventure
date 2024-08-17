@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bruno's Text Adventure</title>
+    <link href="site-style.css" rel="stylesheet" type="text/css">
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="https://bruno-rubim.neocities.org/images/ta-icon.png" type="image/x-icon" />
+    <script type="module" src="main.js"></script>
+  </head>
+  <body class="text-adventure" style="font-size: 20px;">
+    <br><br><br><br>
+    <div id="inner-screen" style="border: white solid 1px; height: 480px; width: 960px; margin-left: auto; margin-right: auto; text-align: left; padding: 16px;">
+      <textarea id="screen-text-area" disabled></textarea>
+    </div>
+    <br><p id="warning-text" style="font-size: 12px; color: #ff0325;   text-shadow: 0px 0px 7px #ff0325;
+    ">&nbsp;</p>
+
+    <div id="command-area">&gt;<input type="text" id="input-text" autocomplete="off" autofocus="on" style="height: 32px; width: 180px;" placeholder="Insert command here..."></div>
+  </body>
+</html>
