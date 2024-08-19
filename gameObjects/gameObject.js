@@ -17,7 +17,6 @@ export class GameObject {
     delete = () => {
         for (let i = 0; i < this.parent.length; i++) {
             if (this.parent[i].name == this.name){
-                console.log('removing the found item');
                 this.parent.splice(i, 1);
             }
         }

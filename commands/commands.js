@@ -327,7 +327,6 @@ export const hit = new Command({
             terminal.writeInWarning(`You can't hit ` + object1.name);
             return;
         }
-        findObjectGeneral(words[0]);
         terminal.writeInScreen(object1.hit('nothing'));
         return;
     }

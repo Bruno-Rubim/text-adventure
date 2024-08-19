@@ -18,7 +18,6 @@ rock.parent = gameState.inventory;
 
 gameState.gainWisdom = (word) => {
     if (!gameState.lookedAt.includes(word)){
-        console.log(word + " added to wisdom");
         gameState.lookedAt.push(word);
     }
 }
