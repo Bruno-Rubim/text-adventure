@@ -15,6 +15,7 @@ export class GameObject {
         gameState.gainWisdom(this.wisdomKey);
     }
     delete = () => {
+        console.log(this.parent);
         for (let i = 0; i < this.parent.length; i++) {
             if (this.parent[i].name == this.name){
                 this.parent.splice(i, 1);

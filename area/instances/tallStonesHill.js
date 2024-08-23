@@ -1,8 +1,9 @@
 import { Area } from "../area.js";
 import { Container } from "../../gameObjects/container.js";
 import { Item } from "../../gameObjects/item.js";
-import { gameState } from "../../gameState.js";
+import { addTimedEvent, gameState } from "../../gameState.js";
 import { GameObject } from "../../gameObjects/gameObject.js";
+import { look } from "../../commands/commands.js";
 
 export const tallStonesHill = new Area();
 
@@ -69,36 +70,89 @@ stones.getDescription = () => {
 }
 tallStonesHill.content.push(stones);
 
+const dandelion = new Item({
+    name: 'sprout',
+    references: ['plant', 'stem', 'flower', 'dandelion',],
+    parent: ground.content,
+});
+delete dandelion.taken;
+dandelion.growthState = 0;
+dandelion.maxGrowthState = 4;
+dandelion.getDescription = () => {
+    let responses = [
+        'Hidden between the blades of grass you notice a small single sprout.',
+        'A group of leaves, all spreading from a single point on the dirt.',
+        'Standing from a few leaves on the grass is a short stem.',
+        'A yellow flower at the end of a stem pointing upwards.',
+        'A dandelion, its fragile softness standing at the end of a tall stem, awaiting for the wind to take it away.',
+    ];
+    return responses[dandelion.growthState];
+}
+let dandelionGrowth = {
+    time: gameState.globalTime + 60,
+    action: () => {
+        dandelionGrowth.time += 60;
+        dandelion.name = dandelion.references[dandelion.growthState];
+        dandelion.growthState++;
+        if (dandelion.growthState < dandelion.maxGrowthState){
+            addTimedEvent(dandelionGrowth);
+        }
+        if (dandelion.growthState == 4){
+            dandelion.taken = () => {
+                return "You have taken the " + dandelion.name + '.';
+            };
+            dandelion.blown = () => {
+                addTimedEvent({time: gameState.globalTime + 1440, action: () => gameState.dandelionField = true});
+                dandelion.delete();
+                return "You hold the dandelion with one hand, before blowing it. Quickly becoming a small group of white particles in the air, which are soon taken by the wind.";
+            }
+        }
+    }
+}
+addTimedEvent(dandelionGrowth);
+ground.content.push(dandelion);
+
 tallStonesHill.getDescription = () => {
     let dayVariables = {
         dusk: {
             '': ``,
-            'areas': `Not far from where you stand, halfway downhill you see the silluette of a tree.`,
-            'wind': `A light cold breeze flows around you`,
+            'windy': `The howling wind echoes in the distance, `,
             'light': `as the twin moons slowly reach closer to the horizon.`,
+            'dandelion': ``,
             'stones': `Around you are 4 tall stones, multiple times your size, each with a strange symbol on them.`,
+            'areas': `Not far from where you stand, halfway downhill you see the silluette of a tree.`,
         },
         morning: {
             '': ``,
-            'areas': `not yet written.`,
-            'wind': `not yet written.`,
-            'light': `not yet written.`,
+            'windy': `A light breeze flows around you.`,
+            'light': `The sun is up, bright and calm.`,
+            'dandelion': ` All over the hill tiny puffy white balls are splattered between the grass.`,
+            'stones': `Around you are 4 tall stones, multiple times your size, each with a strange symbol on them.`,
+            'areas': `Not far from where you stand you can see a bent tree, its round crown bathed in sunlight.`,
         },
         afternoon: {
             '': ``,
-            'areas': `not yet written.`,
-            'wind': `not yet written.`,
+            'windy': `not yet written.`,
             'light': `not yet written.`,
+            'dandelion': ` The hill down is splattered with tiny puffy white balls.`,
+            'stones': `Around you are 4 tall stones, multiple times your size, each with a strange symbol on them.`,
+            'areas': `Not far from where you stand you can see a tree, casting a small shadow around itself.`,
         },
         evening: {
             '': ``,
-            'areas': `not yet written.`,
-            'wind': `not yet written.`,
+            'windy': `not yet written.`,
             'light': `not yet written.`,
+            'dandelion': ``,
+            'stones': `Around you are 4 tall stones, multiple times your size, each with a strange symbol on them.`,
+            'areas': `Not far from where you stand you can see a tree, a big round crown on top of its twisted trunk.`,
         },
     };
+    let fieldState = '';
+    if (gameState.dandelionField){
+        fieldState = 'dandelion';
+    }
     let dayState = dayVariables[gameState.getDayStateBasic()];
-    let response = `You find yourself in a grassy hill. ` + dayState['wind'] + ` ` + dayState['light'] + ` ` + dayState['stones'] + ` ` + dayState['areas'] + '\n' +ground.getDescription();
+    let response = `You find yourself in a grassy hill. ` + dayState[gameState.weather] + ` ` + dayState['light'] + ` ` + dayState[fieldState] + ` ` + dayState['stones'] + ` ` + dayState['areas'] + '\n' +ground.getDescription();
     return response;
 }
 tallStonesHill.lookedAt = (gameState) => {

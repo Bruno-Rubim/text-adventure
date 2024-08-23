@@ -1,7 +1,8 @@
 import { gameState } from "../gameState.js";
+import { Container } from "./container.js";
 import { GameObject } from "./gameObject.js";
 
-export const sky = new GameObject({
+const sky = new GameObject({
     name: 'sky',
     wisdomKey: 'sky',
     references: ['moon','moons','sun','above','up']
@@ -45,3 +46,5 @@ sky.getDescription = () => {
     let response = dayVariables[dayState]['sky'];
     return response;
 }
+
+export const upView = new Container({content: [sky]});

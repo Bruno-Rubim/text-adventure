@@ -1,6 +1,6 @@
 import { tallStonesHill } from "../area/instances/tallStonesHill.js";
 import { voidRoom } from "../area/instances/voidRoom.js";
-import { sky } from "../gameObjects/sky.js";
+import { upView } from "../gameObjects/upView.js";
 import { gameState } from "../gameState.js";
 import * as terminal from "../screen/terminal.js";
 
@@ -9,6 +9,20 @@ class Command {
         this.keywords = keywords;
         this.execute = execute;
     }
+}
+
+//general commands
+
+export const compareArrays = (array1, array2) => {
+    if (array1.length != array2.length){
+        return false;
+    }
+    for (let i = 0; i < array1.length; i++){
+        if (array1[i] != array2[i]){
+            return false;
+        }
+    }
+    return true;
 }
 
 const findObjectArea = (container, condition) => {
@@ -44,6 +58,7 @@ export const findObjectGeneral = (condition) => {
         found = findObjectInventory(condition);
     }
     if (!found) {
+        found = findObjectArea(upView, condition);
     }
     return found;
 }
@@ -62,7 +77,7 @@ const findNeighbourtArea = (condition) => {
 }
 
 const solveWords = (originalWords, action) => {
-    let words = [...originalWords];
+    let words = [...originalWords]
     let target = words.shift();
     let result = [action((content) => content.references.includes(target))];
     let resultIndex = 0;
@@ -77,6 +92,8 @@ const solveWords = (originalWords, action) => {
     }
     return result;
 }
+
+//player commands
 
 export const look = new Command({
     keywords: ['look', 'inspect', 'check', 'examine', 'l', 'x'],
@@ -96,19 +113,14 @@ export const look = new Command({
             target = solvedWords[0];
         }
         if (!target) {
-            if (words[0] == 'sky'){
-                target = sky;
-            } else {
-                solvedWords = solveWords(words, findObjectArea);
-                target = solveWords[0];
-                if (!target) {
-                    terminal.writeInWarning('No ' + words[0] + ' was found');
-                    return;
-                }
-                go.execute(words);
-                look.execute(words);
+            solvedWords = solveWords(words, findNeighbourtArea);
+            target = solvedWords[0];
+            if (!target) {
+                terminal.writeInWarning('No ' + words[0] + ' was found');
                 return;
             }
+            go.execute(words);
+            return;
         }
         if (solvedWords.length > 1) {
             terminal.writeInWarning('Look at one thing at a time');
@@ -230,9 +242,11 @@ export const drop = new Command({
                 words[0] += ' ' + words[i];
             }
         }
-        let target = findObjectInventory(words[0]);
+        let solvedWords = solveWords(words, findObjectInventory)
+        let target = solvedWords[0];
         if (target){
-            let ground = findObjectGeneral('ground');
+            let ground = solveWords(['ground'], findObjectGeneral)[0];
+            console.log(ground);
             target.moveTo(ground.content);
             terminal.writeInScreen('You placed the ' + words[0] + ' is on the ground.');
             return;
@@ -241,28 +255,9 @@ export const drop = new Command({
     }
 });
 
-export const clear = new Command({
-    keywords: ['clear', 'c'],
-    execute: (words) => {
-        if (words.length == 0){
-            terminal.screenText.value = '';
-        }
-    }
-});
-
-export const time = new Command({
-    keywords: ['time', 'hours', '5'],
-    execute: (words) => {
-        if (words.length == 0){
-            terminal.writeInScreen('It is ' + gameState.getHours(gameState.globalTime));
-        }
-    }
-});
-
 export const go = new Command({
     keywords: ['go', 'enter', 'move', 'walk', 'travel', 'g'],
     execute: (words) => {
-        const reference = words.toString().replace(",", " ");
         if (words.length == 0) {
             terminal.writeInWarning('Go where?');
             return;
@@ -274,7 +269,7 @@ export const go = new Command({
         const solvedWords = solveWords(words, findNeighbourtArea);
         const target = solvedWords[0];
         if (!target){
-            terminal.writeInWarning('No ' + reference + ' was found');
+            terminal.writeInWarning('No ' + words + ' was found');
             return;
         }
         terminal.writeInScreen(target.description);
@@ -285,6 +280,16 @@ export const go = new Command({
         }
     }
 });
+
+export const leave = new Command({
+    keywords: ['leave'],
+    execute: (words) => {
+        if (words.length == 0) {
+            go.execute('outside');
+        }
+        return
+    }
+})
 
 export const hit = new Command({
     keywords: ['hit', 'smash', 'attack', 'break', 'h'],
@@ -332,22 +337,6 @@ export const hit = new Command({
     }
 });
 
-export const skip = new Command({
-    keywords: ['skip'],
-    execute: () => {
-        if (gameState.currentArea == voidRoom){
-            gameState.inventory = [];
-            gameState.currentArea = tallStonesHill;
-            terminal.writeInWarning('You skipped the tutorial');
-            clear.execute('');
-            look.execute('');
-            return;
-        }
-        terminal.writeInWarning(`You're not in the tutorial`);
-        return;
-    }
-})
-
 export const read = new Command({
     keywords: ['read', 'r'],
     execute: (words) => {
@@ -355,14 +344,10 @@ export const read = new Command({
             terminal.writeInWarning('Read what?');
             return;
         }
-        if (words.length > 1) {
-            for (let i = 1; i < words.length; i++){
-                words[0] += ' ' + words[i];
-            }
-        }
-        let target = findObjectGeneral(words);
+        let solvedWords = solveWords(words, findObjectGeneral);
+        let target = solvedWords[0];
         if (!target){
-            terminal.writeInWarning(`No ` + words[0] + ` was found`);
+            terminal.writeInWarning(`No ` + words + ` was found`);
             return;
         }
         if (!target.read){
@@ -370,6 +355,28 @@ export const read = new Command({
             return;
         }
         terminal.writeInScreen(target.read());
+        return
+    }
+})
+
+export const blow = new Command({
+    keywords: ['blow', 'r'],
+    execute: (words) => {
+        if (words.length == 0) {
+            terminal.writeInWarning('Blow what?');
+            return;
+        }
+        let solvedWords = solveWords(words, findObjectGeneral);
+        let target = solvedWords[0];
+        if (!target){
+            terminal.writeInWarning(`No ` + words + ` was found`);
+            return;
+        }
+        if (!target.blown){
+            terminal.writeInWarning(`You can't blow ` + words);
+            return;
+        }
+        terminal.writeInScreen(target.blown());
         return
     }
 })
@@ -401,16 +408,6 @@ export const climb = new Command({
     }
 })
 
-export const leave = new Command({
-    keywords: ['leave'],
-    execute: (words) => {
-        if (words.length == 0) {
-            go.execute('outside');
-        }
-        return
-    }
-})
-
 export const use = new Command({
     keywords: ['use', 'u'],
     execute: (words) => {
@@ -419,6 +416,53 @@ export const use = new Command({
     }
 })
 
+export const clear = new Command({
+    keywords: ['clear', 'c'],
+    execute: (words) => {
+        if (words.length == 0){
+            terminal.screenText.value = '';
+        }
+    }
+});
+
+export const time = new Command({
+    keywords: ['time', 'hours', '5'],
+    execute: (words) => {
+        if (words.length == 0){
+            terminal.writeInScreen('It is ' + gameState.getHours(gameState.globalTime));
+        }
+    }
+});
+
+export const timeSkip = new Command({
+    keywords: ['timeskip', 'ts'],
+    execute: (words) => {
+        const ammount = Number(words);
+        if (ammount){
+            gameState.globalTime += ammount;
+            terminal.writeInScreen(`You went forward ` + ammount + ` minutes in time.`);
+            time.execute([]);
+        }
+        return;
+    }
+})
+
+export const skip = new Command({
+    keywords: ['skip'],
+    execute: () => {
+        if (gameState.currentArea == voidRoom){
+            gameState.inventory = [];
+            gameState.currentArea = tallStonesHill;
+            clear.execute('');
+            terminal.writeInScreen('You skipped the tutorial');
+            look.execute('');
+            return;
+        }
+        terminal.writeInWarning(`You're not in the tutorial`);
+        return;
+    }
+})
+
 export const commandList = [
-    look, take, clear, inventory, drop, time, go, hit, place, skip, read, climb, use, leave
+    look, take, clear, inventory, drop, time, go, hit, place, skip, read, climb, use, leave, timeSkip, blow
 ]

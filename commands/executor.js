@@ -1,3 +1,4 @@
+import { checkTimedEvents } from "../gameState.js";
 import * as terminal from "../screen/terminal.js";
 import { commandList } from "./commands.js";
 
@@ -13,6 +14,7 @@ export const executeInput = (input) => {
         let command = commandList.find(command => command.keywords.includes(verb));
         if (command){
             command.execute(words);
+            checkTimedEvents();
         } else {
             verb = verb[0].toUpperCase() + verb.substring(1);
             terminal.writeInWarning(verb + ` is not a command`);

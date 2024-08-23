@@ -42,7 +42,6 @@ input.addEventListener("keyup", function(event) {
     if (inputHistory.length){
         if (event.key === "ArrowUp") {
             inputIndex--;
-            console.log(inputIndex);
             if (inputIndex < 0){
                 inputIndex = 0
             }
@@ -55,7 +54,6 @@ input.addEventListener("keyup", function(event) {
                 inputIndex = inputHistory.length;
                 input.value = '';
             }
-            console.log(inputIndex);
         }
     }
 });

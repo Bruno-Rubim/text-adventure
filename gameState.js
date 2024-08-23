@@ -11,8 +11,10 @@ rock.canBreak = true;
 export const gameState = {
     currentArea: voidRoom,
     inventory: [rock],
-    globalTime: 240,
+    globalTime: 239,
     lookedAt: [],
+    timedEvents: [],
+    weather: 'windy',
 }
 rock.parent = gameState.inventory;
 
@@ -27,8 +29,8 @@ gameState.getWisdom = () => {
 }
 
 gameState.getHours = () => {
-    let time = gameState.globalTime%2400;
-    let hours = (time/60).toFixed(0);
+    let time = gameState.globalTime%1440;
+    let hours = Math.floor(time/60);
     let minutes = (time%60);
     if (minutes < 10) {
         minutes = '0' + minutes;
@@ -37,7 +39,7 @@ gameState.getHours = () => {
 }
 
 gameState.getDayStateBasic = () => {
-    let time = gameState.globalTime%2400;
+    let time = gameState.globalTime%1440;
     if(time > 0 && time <= 390){
         return 'dusk';
     }
@@ -53,7 +55,7 @@ gameState.getDayStateBasic = () => {
 }
 
 gameState.getDayStateComplex = () => {
-    let time = gameState.globalTime%2400;
+    let time = gameState.globalTime%1440;
     if(time > 60 && time <= 300){
         return 'dusk';
     }
@@ -81,18 +83,13 @@ gameState.getDayStateComplex = () => {
 }
 
 gameState.getDayStateSimple = () => {
-    let time = gameState.globalTime%2400;
+    let time = gameState.globalTime%1440;
     if(time > 390 && time <= 1110){
         return 'day';
     }
     if(time > 1110 || time <= 390){
         return 'night';
     }
-}
-
-const realTimeAdd = () => {
-    gameState.globalTime += 1;
-    setTimeout(realTimeAdd, 15000);
 }
 
 export const getCurrentLight = () => {
@@ -104,4 +101,29 @@ export const getCurrentLight = () => {
     return gameState.getDayStateSimple();
 }
 
+export const addTimedEvent = (event) => {
+    gameState.timedEvents.push({
+        triggerTime: event.time,
+        eventAction: event.action
+    })
+    gameState.timedEvents.sort((a, b) => a.triggerTime - b.triggerTime);
+}
+
+export const checkTimedEvents = () => {
+    let i = 0;
+    for (let event of gameState.timedEvents){
+        if (gameState.globalTime < event.triggerTime){
+            break;
+        }
+        event.eventAction();
+        i++;
+    }
+    gameState.timedEvents.splice(0, i);
+}
+
+const realTimeAdd = () => {
+    gameState.globalTime += 1;
+    checkTimedEvents();
+    setTimeout(realTimeAdd, 15000);
+}
 realTimeAdd();

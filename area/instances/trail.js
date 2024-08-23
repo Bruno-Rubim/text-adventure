@@ -17,7 +17,8 @@ const ground = new Container({
 ground.getContentDescription = () => {
     let contentDescription = '';
     let response = contentDescription;
-    if (getCurrentLight() == 'night') {
+    let light = getCurrentLight();
+    if (light == 'night') {
         return response;
     }
     if (ground.content.length > 0 ){
@@ -32,6 +33,9 @@ ground.getContentDescription = () => {
                     contents += ', a '  + (ground.content[i].name);
                 }
             }
+        }
+        if (gameState.getDayStateSimple() != 'day'){
+            contents += ', iluminated by the ' + light.name;
         }
         contentDescription = ` Off to the side of the path you can make out ` + contents + `.`;
     }
