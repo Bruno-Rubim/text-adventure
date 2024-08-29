@@ -150,7 +150,7 @@ gem.hit = (weapon) => {
     return result;
 }
 gem.taken = () => {
-    let result = 'You took the gem.';
+    let result = `You have taken the <b class="item">gem</b>.`;
     return result;
 }
 table.content.push(gem);

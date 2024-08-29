@@ -3,7 +3,6 @@ import { Container } from "../../gameObjects/container.js";
 import { Item } from "../../gameObjects/item.js";
 import { addTimedEvent, gameState } from "../../gameState.js";
 import { GameObject } from "../../gameObjects/gameObject.js";
-import { look } from "../../commands/commands.js";
 
 export const tallStonesHill = new Area();
 
@@ -57,11 +56,11 @@ stones.getDescription = () => {
         },
         afternoon: {
             '': ``,
-            'sky': `not yet written.`,
+            'sky': `bright blue sky.`,
         },
         evening: {
             '': ``,
-            'sky': `not yet written.`,
+            'sky': `fading dark sky.`,
         },
     };
     let dayState = dayVariables[gameState.getDayStateBasic()];
@@ -124,16 +123,16 @@ tallStonesHill.getDescription = () => {
         },
         morning: {
             '': ``,
-            'windy': `A light breeze flows around you.`,
-            'light': `The sun is up, bright and calm.`,
+            'windy': `A light breeze flows around you `,
+            'light': `and the sun is up, bright and calm.`,
             'dandelion': ` All over the hill tiny puffy white balls are splattered between the grass.`,
             'stones': `Around you are 4 tall stones, multiple times your size, each with a strange symbol on them.`,
             'areas': `Not far from where you stand you can see a bent tree, its round crown bathed in sunlight.`,
         },
         afternoon: {
             '': ``,
-            'windy': `not yet written.`,
-            'light': `not yet written.`,
+            'windy': `The fresh wind surrounds you,`,
+            'light': ` while the sun shines in the bright sky.`,
             'dandelion': ` The hill down is splattered with tiny puffy white balls.`,
             'stones': `Around you are 4 tall stones, multiple times your size, each with a strange symbol on them.`,
             'areas': `Not far from where you stand you can see a tree, casting a small shadow around itself.`,

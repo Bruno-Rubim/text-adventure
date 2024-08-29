@@ -5,6 +5,7 @@ import { Item } from "./gameObjects/item.js";
 const rock = new Item({
     name: 'rock',
     description: `An oddly shaped sturdy grey rock, like a large pebble, almost taking up your entire palm. Holding it you feel like you could HIT something WITH it.`,
+    references: ['pebble']
 });
 rock.canBreak = true;
 
@@ -124,6 +125,6 @@ export const checkTimedEvents = () => {
 const realTimeAdd = () => {
     gameState.globalTime += 1;
     checkTimedEvents();
-    setTimeout(realTimeAdd, 15000);
+    setTimeout(realTimeAdd, 1000);
 }
 realTimeAdd();

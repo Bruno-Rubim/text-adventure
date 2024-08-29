@@ -1,5 +1,5 @@
 export class GameObject {
-    constructor({name = '', description = '', references = [], parent = null, wisdomKey = name}){
+    constructor({name = '', description = '', references = [], parent = null, wisdomKey = name, colour = '#fff'}){
         this.name = name;
         this.content = null;
         this.description = description;
@@ -8,6 +8,9 @@ export class GameObject {
         this.wisdomKey = wisdomKey;
         this.references.push(this.name);
     }
+    referTo = () => {
+        return "<b>" + this.name + "</b>";
+    }
     getDescription = () => {
         return this.description;
     }
@@ -15,7 +18,6 @@ export class GameObject {
         gameState.gainWisdom(this.wisdomKey);
     }
     delete = () => {
-        console.log(this.parent);
         for (let i = 0; i < this.parent.length; i++) {
             if (this.parent[i].name == this.name){
                 this.parent.splice(i, 1);

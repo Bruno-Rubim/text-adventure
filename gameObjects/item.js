@@ -10,7 +10,9 @@ export class Item extends GameObject {
         })
         this.everTaken = false;
         this.taken = () => {
-            return "You have taken the " + this.name + '.';
+            let response = `You have taken the <b class="item">` + this.name + `</b>.`;
+            console.log(response);
+            return response;
         }
     }
 }

@@ -132,7 +132,7 @@ export const look = new Command({
             terminal.writeInWarning(words + ' has no lookedAt');
         };
         target.everSeen = true;
-        terminal.writeInScreen(target.getDescription());
+        terminal.addTextToScreenQueue(target.getDescription());
         return;
     }
 });
@@ -159,9 +159,9 @@ export const take = new Command({
             terminal.writeInWarning(`You already have that`);
             return;
         }
-        terminal.writeInScreen(target.taken());
+        terminal.addTextToScreenQueue(target.taken());
         if (!target.everSeen){
-            look.execute([target.name]);
+            //look.execute([target.name]);
         }
         return;
     }
@@ -207,7 +207,7 @@ export const place = new Command({
         } else {
             subject.moveTo(target.content);
         }
-        terminal.writeInScreen(result);
+        terminal.addTextToScreenQueue(result);
         return;
     }
 });
@@ -216,7 +216,7 @@ export const inventory = new Command({
     keywords: ['inventory', 'inventry', 'i'],
     execute: (words) => {
         if (gameState.inventory.length == 0){
-            terminal.writeInScreen('Your inventory is empty.');
+            terminal.addTextToScreenQueue('Your inventory is empty.');
             return
         }
         let text = 'You have:';
@@ -225,7 +225,7 @@ export const inventory = new Command({
             itemName = itemName[0].toUpperCase() + itemName.substring(1);
             text += '\n' + (itemName)
         }
-        terminal.writeInScreen(text);
+        terminal.addTextToScreenQueue(text);
         gameState.globalTime += 1;
     }
 });
@@ -248,7 +248,7 @@ export const drop = new Command({
             let ground = solveWords(['ground'], findObjectGeneral)[0];
             console.log(ground);
             target.moveTo(ground.content);
-            terminal.writeInScreen('You placed the ' + words[0] + ' is on the ground.');
+            terminal.addTextToScreenQueue('You placed the ' + words[0] + ' is on the ground.');
             return;
         }
         terminal.writeInWarning('You have no ' + words + '.');
@@ -272,7 +272,7 @@ export const go = new Command({
             terminal.writeInWarning('No ' + words + ' was found');
             return;
         }
-        terminal.writeInScreen(target.description);
+        terminal.addTextToScreenQueue(target.description);
         gameState.currentArea = target.areaObject;
         gameState.globalTime += target.distance;
         if (!target.everSeen){
@@ -322,7 +322,7 @@ export const hit = new Command({
                 hit = true;
             }
             if (hit) {
-                terminal.writeInScreen(response);
+                terminal.addTextToScreenQueue(response);
                 return ;
             }
             terminal.writeInWarning(`You can't hit either.`);
@@ -332,7 +332,7 @@ export const hit = new Command({
             terminal.writeInWarning(`You can't hit ` + object1.name);
             return;
         }
-        terminal.writeInScreen(object1.hit('nothing'));
+        terminal.addTextToScreenQueue(object1.hit('nothing'));
         return;
     }
 });
@@ -354,7 +354,7 @@ export const read = new Command({
             terminal.writeInWarning(`You can't read ` + words);
             return;
         }
-        terminal.writeInScreen(target.read());
+        terminal.addTextToScreenQueue(target.read());
         return
     }
 })
@@ -376,7 +376,7 @@ export const blow = new Command({
             terminal.writeInWarning(`You can't blow ` + words);
             return;
         }
-        terminal.writeInScreen(target.blown());
+        terminal.addTextToScreenQueue(target.blown());
         return
     }
 })
@@ -403,7 +403,7 @@ export const climb = new Command({
             terminal.writeInWarning(`You can't climb the` + target.name);
             return;
         }
-        terminal.writeInScreen(target.climbed());
+        terminal.addTextToScreenQueue(target.climbed());
         return
     }
 })
@@ -420,7 +420,7 @@ export const clear = new Command({
     keywords: ['clear', 'c'],
     execute: (words) => {
         if (words.length == 0){
-            terminal.screenText.value = '';
+            terminal.screenText.innerHTML = '';
         }
     }
 });
@@ -429,7 +429,7 @@ export const time = new Command({
     keywords: ['time', 'hours', '5'],
     execute: (words) => {
         if (words.length == 0){
-            terminal.writeInScreen('It is ' + gameState.getHours(gameState.globalTime));
+            terminal.addTextToScreenQueue('It is ' + gameState.getHours(gameState.globalTime));
         }
     }
 });
@@ -440,7 +440,7 @@ export const timeSkip = new Command({
         const ammount = Number(words);
         if (ammount){
             gameState.globalTime += ammount;
-            terminal.writeInScreen(`You went forward ` + ammount + ` minutes in time.`);
+            terminal.addTextToScreenQueue(`You went forward ` + ammount + ` minutes in time.`);
             time.execute([]);
         }
         return;
@@ -454,7 +454,7 @@ export const skip = new Command({
             gameState.inventory = [];
             gameState.currentArea = tallStonesHill;
             clear.execute('');
-            terminal.writeInScreen('You skipped the tutorial');
+            terminal.addTextToScreenQueue('You skipped the tutorial');
             look.execute('');
             return;
         }
@@ -463,6 +463,18 @@ export const skip = new Command({
     }
 })
 
+export const speed = new Command({
+    keywords: ['speed'],
+    execute: (words) => {
+        let ammount = Number(words);
+        if (ammount){
+            terminal.setWritingDelay(ammount);
+        }
+        terminal.addTextToScreenQueue("Writing delay was set to " + ammount);
+        return;
+    }
+})
+
 export const commandList = [
-    look, take, clear, inventory, drop, time, go, hit, place, skip, read, climb, use, leave, timeSkip, blow
+    look, take, clear, inventory, drop, time, go, hit, place, skip, read, climb, use, leave, timeSkip, blow, speed
 ]
