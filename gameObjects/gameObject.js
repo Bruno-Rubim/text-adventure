@@ -1,5 +1,5 @@
 export class GameObject {
-    constructor({name = '', description = '', references = [], parent = null, wisdomKey = name, colour = '#fff'}){
+    constructor({name = '', description = '', references = [], parent = null, wisdomKey = name, color = 'white'}){
         this.name = name;
         this.content = null;
         this.description = description;
@@ -7,9 +7,14 @@ export class GameObject {
         this.parent = parent;
         this.wisdomKey = wisdomKey;
         this.references.push(this.name);
+        this.cathergories = [color];
     }
     referTo = () => {
-        return "<b>" + this.name + "</b>";
+        let cathergories = '';
+        for (let i in this.cathergories){
+            cathergories += this.cathergories[i] + " ";
+        } 
+        return `<b class="` + cathergories + `">` + this.name + `</b>`;
     }
     getDescription = () => {
         return this.description;
@@ -34,4 +39,3 @@ export class GameObject {
         return true;
     }
 };
-

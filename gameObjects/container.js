@@ -18,7 +18,7 @@ export class Container extends GameObject {
         response += ' You see'
         for (let i = 0; i < this.content.length; i++) {
             if (i == 0){
-                response += ' a '  + (this.content[i].references);
+                response += ' a '  + (this.content[i].referTo());
             } else {
                 if (i == this.content.length -1) {
                     response += ' and a '  + (this.content[i].references);

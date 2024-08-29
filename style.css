@@ -30,19 +30,7 @@ textarea[id="notepad-text-area"] {
     resize: none;
     image-rendering: pixelated;
 }
-textarea[id=screen-text-area] {
-    width: 100%;
-    height: 100%;
-    background-color: #000;
-    color: #fff;
-    font-family: courier_primeregular;
-    font-size: 18px;
-    text-shadow: 0px 0px 7px #fff;
-    cursor: url("../images/cursor-vertical-scroll.png"), default;
-    border: none;
-    resize: none;
-}
-div[id=screen-text-area] {
+div[id=screen-text] {
     width: 100%;
     height: 100%;
     font-size: 18px;
@@ -56,9 +44,37 @@ textarea:focus {
     padding: 0px;
     border: #000 solid 8px;
 }
-.item{
+.yellow{
     color: #ffd900;
     text-shadow: 0px 0px 7px #ffd900;
+}
+.white{
+    color: #fff;
+    text-shadow: 0px 0px 7px #fff;
+}
+.blue{
+    color: #160cfa;
+    text-shadow: 0px 0px 7px #160cfa;
+}
+.orange{
+    color: #ff4c00;
+    text-shadow: 0px 0px 7px #ff4c00;
+}
+.red{
+    color: #ff0325;
+    text-shadow: 0px 0px 7px #ff0325;
+}
+.cyan{
+    color: #00daff;
+    text-shadow: 0px 0px 7px #00daff;
+}
+.black{
+    color: #000;
+    text-shadow: 0px 0px 7px #fff;
+}
+.green{
+    color: #41fc01;
+    text-shadow: 0px 0px 7px #41fc01;
 }
 @font-face {
     font-family: 'courier_primeregular';

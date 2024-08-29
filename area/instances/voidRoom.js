@@ -34,16 +34,16 @@ ground.getDescription = () => {
     response += ' You see'
     for (let i = 0; i < ground.content.length; i++) {
         if (i == 0){
-            response += ' a '  + (ground.content[i].name.toUpperCase());
+            response += ' a '  + (ground.content[i].referTo());
         } else {
             if (i == ground.content.length -1) {
-                response += ' and a '  + (ground.content[i].name.toUpperCase());
+                response += ' and a '  + (ground.content[i].referTo());
             } else {
-                response += ', a '  + (ground.content[i].name.toUpperCase());
+                response += ', a '  + (ground.content[i].referTo());
             }
         }
     }
-    response += ' on it.'
+    response += ' in place.'
     return response;
 }
 voidRoom.content.push(ground);
@@ -115,12 +115,12 @@ table.getDescription = () => {
     response += ' You see'
     for (let i = 0; i < table.content.length; i++) {
         if (i == 0){
-            response += ' a '  + (table.content[i].name.toUpperCase());
+            response += ' a '  + (table.content[i].referTo());
         } else {
             if (i == table.content.length -1) {
-                response += ' and a '  + (table.content[i].name.toUpperCase());
+                response += ' and a '  + (table.content[i].referTo());
             } else {
-                response += ', a '  + (table.content[i].name.toUpperCase());
+                response += ', a '  + (table.content[i].referTo());
             }
         }
     }
@@ -134,7 +134,6 @@ const gem = new Item({
     description: `A gem made of clear crystal. Looking through it, light waves are refracted in colorful bright shades within its inside. It looks fragile, like it might shatter if you HIT it.`,
     parent: table.content,
 });
-
 gem.hitDescription = `You try hitting it with your hands but nothing happens to it. Maybe if it's hit with something sturdier and less afraid of pain something different would happen.`
 gem.broken = () => {
     voidRoom.content.push(hole);
@@ -147,10 +146,6 @@ gem.hit = (weapon) => {
     if (weapon.canBreak){
         result = gem.broken();
     }
-    return result;
-}
-gem.taken = () => {
-    let result = `You have taken the <b class="item">gem</b>.`;
     return result;
 }
 table.content.push(gem);

@@ -1,6 +1,6 @@
 import { executeInput } from "../commands/executor.js";
 
-export const screenText = document.querySelector("#screen-text-area");
+export const screenText = document.querySelector("#screen-text");
 export const warningText = document.querySelector("#warning-text");
 export const input = document.querySelector("#input-text");
 
@@ -20,6 +20,7 @@ const updateScreen = () => {
         }
         if (text != '') {
             wrirtingInScreen = true;
+            input.disabled = true;
             typeWriterEffect(screenText, text);
             writeInWarning('&nbsp;');
         }
@@ -38,6 +39,8 @@ const insertChar = (textObject) => {
         document.querySelector("#" + textObject.target).innerHTML += textObject.char;
         if (textObject.isLast) {
             wrirtingInScreen = false;
+            input.disabled = false;
+            input.focus();
             updateScreen();
         }
     }, textObject.delay);
@@ -87,7 +90,7 @@ const typeWriterEffect = (originalTarget, text) => {
             charCount += 7;
         }
         if (text[textIndex] == "."){
-            charCount += 16;
+            charCount += 10;
         }
         charCount++;
     }

@@ -20,12 +20,12 @@ ground.getContentDescription = () => {
             let contents = '';
             for (let i = 0; i < ground.content.length; i++) {
                 if (i == 0){
-                    contents += 'a '  + (ground.content[i].name);
+                    contents += 'a '  + (ground.content[i].referTo());
                 } else {
                     if (i == ground.content.length -1) {
-                        contents += ' and a '  + (ground.content[i].name);
+                        contents += ' and a '  + (ground.content[i].referTo());
                     } else {
-                        contents += ', a '  + (ground.content[i].name);
+                        contents += ', a '  + (ground.content[i].referTo());
                     }
                 }
             }
@@ -53,7 +53,7 @@ const hook = new Container({
 hook.getContentDescription = () => {
     let contentDescription = '';
     if (hook.content.length > 0 ){
-        contentDescription = ` holds up a ` + hook.content[0].name;
+        contentDescription = ` holds up a ` + hook.content[0].referTo();
     }
     return contentDescription;
 }
@@ -67,6 +67,7 @@ const lantern = new Item({
     name: 'lantern',
     description: 'An old looking lantern, inside the glass a orange rock glows, illuminating your immediate surroundings.',
     parent: hook.content,
+    color: 'orange',
 });
 lantern.lightSource = true;
 hook.content.push(lantern);
