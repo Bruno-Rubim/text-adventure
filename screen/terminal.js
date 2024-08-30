@@ -6,7 +6,7 @@ export const input = document.querySelector("#input-text");
 
 let wrirtingInScreen = false;
 let screenTextQueue = [];
-let writingDelay = 1;
+let writingDelay = 25;
 
 export const setWritingDelay = (num) => {
     writingDelay = num;
