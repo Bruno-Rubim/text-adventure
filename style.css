@@ -36,6 +36,7 @@ div[id=screen-text] {
     font-size: 18px;
     text-shadow: 0px 0px 7px #fff;
     cursor: url("../images/cursor-vertical-scroll.png"), default;
+    overflow: auto;
 }
 textarea:focus {
     outline: none;
@@ -44,17 +45,17 @@ textarea:focus {
     padding: 0px;
     border: #000 solid 8px;
 }
-.yellow{
-    color: #ffd900;
-    text-shadow: 0px 0px 7px #ffd900;
+.black{
+    color: #000;
+    text-shadow: 0px 0px 7px #fff;
 }
 .white{
     color: #fff;
     text-shadow: 0px 0px 7px #fff;
 }
-.blue{
-    color: #160cfa;
-    text-shadow: 0px 0px 7px #160cfa;
+.yellow{
+    color: #ffd900;
+    text-shadow: 0px 0px 7px #ffd900;
 }
 .orange{
     color: #ff4c00;
@@ -64,13 +65,13 @@ textarea:focus {
     color: #ff0325;
     text-shadow: 0px 0px 7px #ff0325;
 }
+.blue{
+    color: #160cfa;
+    text-shadow: 0px 0px 7px #160cfa;
+}
 .cyan{
     color: #00daff;
     text-shadow: 0px 0px 7px #00daff;
-}
-.black{
-    color: #000;
-    text-shadow: 0px 0px 7px #fff;
 }
 .green{
     color: #41fc01;

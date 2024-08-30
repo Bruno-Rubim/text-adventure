@@ -6,8 +6,8 @@ export const input = document.querySelector("#input-text");
 
 let wrirtingInScreen = false;
 let screenTextQueue = [];
+let writingDelay = 1;
 
-let writingDelay = 50;
 export const setWritingDelay = (num) => {
     writingDelay = num;
 }
@@ -34,9 +34,10 @@ export const addTextToScreenQueue = (text) => {
     updateScreen();
 }
 
-const insertChar = (textObject) => {
+const insertTextFragment = (textObject) => {
     setTimeout(() => {
-        document.querySelector("#" + textObject.target).innerHTML += textObject.char;
+        document.querySelector("#" + textObject.target).innerHTML += textObject.fragment;
+        screenText.scrollTop = screenText.scrollHeight;
         if (textObject.isLast) {
             wrirtingInScreen = false;
             input.disabled = false;
@@ -48,54 +49,56 @@ const insertChar = (textObject) => {
 
 let universalIdCounter = 0;
 const typeWriterEffect = (originalTarget, text) => {
-    let currentCharacter = '';
-    let insertDelay = writingDelay;
-    let charCount = 0;
+    let currentFragment = '';
+    let fragmentCount = 0;
     let targetArray = [originalTarget.id];
-    let targetLayer = 0;
-    let nextTargetLayer = 0;
+    let targetIndex = 0;
+    let nextTargetIndex = 0;
     let textArray = [];
     let lastText = false;
     for(let textIndex = 0; textIndex < text.length; textIndex++){
-        currentCharacter = text[textIndex];
+        currentFragment = text[textIndex];
         let hasId = false;
-        const id = "id" + universalIdCounter;
         if (text[textIndex] == "<"){
             do {
                 textIndex++;
-                currentCharacter += text[textIndex];
+                currentFragment += text[textIndex];
                 if (text[textIndex] == " " && !hasId){
                     hasId = true;
-                    currentCharacter += `id="` + id + `" `;
                     universalIdCounter++;
-                    nextTargetLayer++;
+                    const id = `tag` + universalIdCounter;
+                    currentFragment +=  `id="` + id + `" `;
+                    nextTargetIndex = targetArray.length;
                     targetArray.push(id);
                 }
                 if (text[textIndex] == "/" && !hasId){
-                    nextTargetLayer--;
+                    nextTargetIndex = 0;
                 }
             } while (text[textIndex] != ">");
         }
         if (textIndex == text.length - 1) {
             lastText = true;
         }
+        if(currentFragment == "<br>"){
+            fragmentCount --;
+        }
         textArray.push({
-            target: targetArray[targetLayer],
-            char: currentCharacter,
-            delay: insertDelay * charCount,
+            target: targetArray[targetIndex],
+            fragment: currentFragment,
+            delay: writingDelay * fragmentCount,
             isLast: lastText,
         })
-        targetLayer = nextTargetLayer;
+        targetIndex = nextTargetIndex;
         if (text[textIndex] == ","){
-            charCount += 7;
+            fragmentCount += 7;
         }
         if (text[textIndex] == "."){
-            charCount += 10;
+            fragmentCount += 10;
         }
-        charCount++;
+        fragmentCount++;
     }
     while (textArray.length > 0){
-        insertChar(textArray[0]);
+        insertTextFragment(textArray[0]);
         textArray.shift();
     }
 }
@@ -148,5 +151,3 @@ input.addEventListener("keyup", function(event) {
         }
     }
 });
-
-addTextToScreenQueue(`When unsure where you are, LOOK AROUND.`);

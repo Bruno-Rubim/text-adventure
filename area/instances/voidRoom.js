@@ -4,13 +4,17 @@ import { Item } from "../../gameObjects/item.js";
 import { Lock } from "../../gameObjects/lock.js";
 import { GameObject } from "../../gameObjects/gameObject.js";
 import { tallStonesHill } from "./tallStonesHill.js";
+import * as terminal from "../../screen/terminal.js"
+import { gameState } from "../../gameState.js";
 
 export const voidRoom = new Area();
 
+terminal.addTextToScreenQueue(`When unsure where you are, <b class=" command">look around</b>.`);
+
 const tutorial = {
     stepsDone: [],
-    lookAround: ' Your eyes struggle to focus on anything until a black TABLE comes into view.\nYou can LOOK at TABLE.',
-    hitGem: '\nYou can CHECK your INVENTORY to see if you have anything useful.',
+    lookAround: ' Your eyes struggle to focus on anything until a black <b class="white">table</b> comes into view.\nYou can <b class="command">look</b> at <b class="white">table</b>.',
+    hitGem: '\nYou can <b class="command">check</b> your <b class="command">inventory</b> to see if you have anything useful.',
 };
 const advanceTutorial = (step) => {
     if (!tutorial.stepsDone.includes(step)) {
@@ -66,12 +70,10 @@ const hole = new Lock({
     references: ['slot', 'floor'],
     description: `An oddly shapped hole, a little smaller than your hand, half as deep as it is wide. You could probably place something in it`, 
     key: 'rock', 
-    unlockDescription: `You pick up the rock again and put it on the hole. Right before it touches the cavity, a strange force pulls it from your hand, clicking it in place. The dark outline fills with an empty black void, swallowing the hole becoming a doorway to the ABYSS`,
     failedUnlockDescription: `It doesn't fit`,
     parent: voidRoom.content,
 });
 hole.placed = (item) => {
-    console.log(hole);
     let resultDescription = hole.failedUnlockDescription;
     let unlocked = false;
     if (item.name == hole.key){
@@ -87,11 +89,11 @@ hole.placed = (item) => {
     }
     return [unlocked, resultDescription];
 }
-
 const outline = new GameObject({
     name: 'outline',
     references: ['outline'],
     description: `A black rectangular outline standing on nothing, like a series of slits on space itself. Listening close, quiet drowning whispers can be heard coming from its gaps. In the very middle you notice a small hole.`,
+    color: 'black',
     parent: hole.content,
 })
 const gaps = new GameObject({
@@ -100,6 +102,7 @@ const gaps = new GameObject({
     parent: hole.content,
 })
 hole.content.push(outline, gaps);
+hole.unlockDescription = `You pick up the rock again and put it on the hole. Right before it touches the cavity, a strange force pulls it from your hand, clicking it in place. The dark ` + outline.referTo() + ` fills with an empty black void, swallowing the hole and becoming a doorway to the ABYSS`;
 
 const table = new Container({
     name: `table`,
@@ -131,14 +134,14 @@ table.getDescription = () => {
 const gem = new Item({
     name: 'gem',
     references: ['gem', 'crystal'],
-    description: `A gem made of clear crystal. Looking through it, light waves are refracted in colorful bright shades within its inside. It looks fragile, like it might shatter if you HIT it.`,
+    description: `A gem made of clear crystal. Looking through it, light waves are refracted in colorful bright shades within its inside. It looks fragile, like it might shatter if you <b class="white">hit</b> it.`,
     parent: table.content,
 });
 gem.hitDescription = `You try hitting it with your hands but nothing happens to it. Maybe if it's hit with something sturdier and less afraid of pain something different would happen.`
 gem.broken = () => {
     voidRoom.content.push(hole);
     gem.delete();
-    return `You pick the gem with one hand and the rock with the other, without hesitation you smash both together. The noise of its material shattering pierces within your head. What was once shining safely in your hands is now a scattered dozen shards that quickly evaporate out of view.\nOn the opposite side of the table, a rectangular black outline forms seemingly standing on thin air, with a hole in the middle of it.`;
+    return `You pick the gem with one hand and the rock with the other, without hesitation you smash both together. The noise of its material shattering pierces within your head. What was once shining safely in your hands is now a scattered dozen shards that quickly evaporate out of view.\nOn the opposite side of the table, a rectangular ` + outline.referTo() + ` forms seemingly standing on thin air, with a ` + hole.referTo() + ` in the middle of it.`;
 };
 gem.hit = (weapon) => {
     let result = gem.hitDescription;

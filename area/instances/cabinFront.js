@@ -7,7 +7,7 @@ import { GameObject } from "../../gameObjects/gameObject.js";
 export const cabinFront = new Area();
 
 cabinFront.name = `cabin front`;
-cabinFront.references = ['light', 'cabin', 'cabin outside'];
+cabinFront.references = ['light', 'cabin', 'cabin outside', 'outside'];
 const ground = new Container({
     name: `ground`,
     references: ['floor', 'down'],

@@ -4,7 +4,7 @@ import { Item } from "./gameObjects/item.js";
 
 const rock = new Item({
     name: 'rock',
-    description: `An oddly shaped sturdy grey rock, like a large pebble, almost taking up your entire palm. Holding it you feel like you could HIT something WITH it.`,
+    description: `An oddly shaped sturdy grey rock, like a large pebble, almost taking up your entire palm. Holding it you feel like you could <b class="white">hit</b> something <b class="white">with</b> it.`,
     references: ['pebble']
 });
 rock.canBreak = true;

@@ -7,7 +7,7 @@ import { GameObject } from "../../gameObjects/gameObject.js";
 export const cabinInside = new Area();
 
 cabinInside.name = `cabin inside`;
-cabinInside.references = ['inside', 'cabin', 'cabin outside'];
+cabinInside.references = ['inside', 'cabin', 'inside cabin'];
 const ground = new Container({
     name: `ground`,
     references: ['floor', 'down'],
@@ -19,12 +19,12 @@ ground.getContentDescription = () => {
         let contents = '';
         for (let i = 0; i < ground.content.length; i++) {
             if (i == 0){
-                contents += 'a '  + (ground.content[i].name);
+                contents += 'a '  + (ground.content[i].referTo());
             } else {
                 if (i == ground.content.length -1) {
-                    contents += ' and a '  + (ground.content[i].name);
+                    contents += ' and a '  + (ground.content[i].referTo());
                 } else {
-                    contents += ', a '  + (ground.content[i].name);
+                    contents += ', a '  + (ground.content[i].referTo());
                 }
             }
         }
@@ -48,6 +48,9 @@ const ceiling = new GameObject({
     description: 'tbw',
     references: ['up', 'above', 'ceiling', 'moon', 'moons', 'sun'],
 })
+ceiling.getDescription = () => {
+    return response;
+}
 
 cabinInside.getDescription = () => {
     let dayVariables = {
@@ -57,7 +60,7 @@ cabinInside.getDescription = () => {
     };
     let lightVariable = '';
     let dayState = dayVariables[gameState.getDayStateBasic()];
-    let response = `You're standing outside a wooden cabin. In front of it only a dirt trail that goes towards a hill in the distance. ` + hook.getDescription();
+    let response = `Inside the cabin`;
     return response;
 }
 cabinInside.lookedAt = (gameState) => {

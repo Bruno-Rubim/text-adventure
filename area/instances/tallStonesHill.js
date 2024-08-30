@@ -40,7 +40,8 @@ tallStonesHill.content.push(ground);
 
 const stones = new GameObject({
     name: 'stones',
-    description: ``,
+    references: ['symbols', 'tall stones'],
+    description: `the stones`,
     parent: tallStonesHill.content,
     wisdomKey: 'hill stones',
 })

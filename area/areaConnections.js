@@ -75,3 +75,9 @@ cabinFront.neighbourAreas = [ new AreaConnection({
     distance: 0,
     description: `You enter the cabin.`
 })];
+
+cabinInside.neighbourAreas = [ new AreaConnection({
+    areaObject: cabinFront,
+    distance: 0,
+    description: `You leave the cabin.`
+})];

@@ -23,12 +23,12 @@ ground.getContentDescription = () => {
         let contents = '';
         for (let i = 0; i < ground.content.length; i++) {
             if (i == 0){
-                contents += 'a '  + (ground.content[i].name);
+                contents += 'a '  + (ground.content[i].referTo());
             } else {
                 if (i == ground.content.length -1) {
-                    contents += ' and a '  + (ground.content[i].name);
+                    contents += ' and a '  + (ground.content[i].referTo());
                 } else {
-                    contents += ', a '  + (ground.content[i].name);
+                    contents += ', a '  + (ground.content[i].referTo());
                 }
             }
         }
@@ -50,6 +50,7 @@ const oldBook = new Item({
     name: 'old book',
     description: `An old looking book, the cover seems to be made of bark with a rough texture. The pages are thick, worn and dirty.`,
     references: ['book'],
+    color: 'red',
     parent: ground.content,
 });
 oldBook.read = () => {

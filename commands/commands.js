@@ -96,7 +96,7 @@ const solveWords = (originalWords, action) => {
 //player commands
 
 export const look = new Command({
-    keywords: ['look', 'inspect', 'check', 'examine', 'l', 'x'],
+    keywords: ['look', 'inspect', 'check', 'examine', 'describe', 'l', 'x'],
     execute: (words) => {
         if (words[0] == 'inventory') {
             inventory.execute([]);
@@ -161,7 +161,7 @@ export const take = new Command({
         }
         terminal.addTextToScreenQueue(target.taken());
         if (!target.everSeen){
-            //look.execute([target.name]);
+            look.execute([target.name]);
         }
         return;
     }
@@ -221,9 +221,7 @@ export const inventory = new Command({
         }
         let text = 'You have:';
         for(let i = 0; i < gameState.inventory.length; i++){
-            let itemName = gameState.inventory[i].name;
-            itemName = itemName[0].toUpperCase() + itemName.substring(1);
-            text += '\n' + (itemName)
+            text += '\n' + gameState.inventory[i].referTo();
         }
         terminal.addTextToScreenQueue(text);
         gameState.globalTime += 1;
@@ -256,7 +254,7 @@ export const drop = new Command({
 });
 
 export const go = new Command({
-    keywords: ['go', 'enter', 'move', 'walk', 'travel', 'g'],
+    keywords: ['go', 'move', 'walk', 'travel', 'g'],
     execute: (words) => {
         if (words.length == 0) {
             terminal.writeInWarning('Go where?');
@@ -285,7 +283,17 @@ export const leave = new Command({
     keywords: ['leave'],
     execute: (words) => {
         if (words.length == 0) {
-            go.execute('outside');
+            go.execute(['outside']);
+        }
+        return
+    }
+})
+
+export const enter = new Command({
+    keywords: ['enter'],
+    execute: (words) => {
+        if (words.length == 0) {
+            go.execute(['inside']);
         }
         return
     }
@@ -454,7 +462,7 @@ export const skip = new Command({
             gameState.inventory = [];
             gameState.currentArea = tallStonesHill;
             clear.execute('');
-            terminal.addTextToScreenQueue('You skipped the tutorial');
+            terminal.addTextToScreenQueue('You skipped the tutorial.');
             look.execute('');
             return;
         }
@@ -470,11 +478,11 @@ export const speed = new Command({
         if (ammount){
             terminal.setWritingDelay(ammount);
         }
-        terminal.addTextToScreenQueue("Writing delay was set to " + ammount);
+        terminal.addTextToScreenQueue("Writing delay was set to " + ammount + ".");
         return;
     }
 })
 
 export const commandList = [
-    look, take, clear, inventory, drop, time, go, hit, place, skip, read, climb, use, leave, timeSkip, blow, speed
+    look, take, clear, inventory, drop, time, go, hit, place, skip, read, climb, use, leave, enter, timeSkip, blow, speed
 ]
