@@ -13,10 +13,27 @@ input[type=text]{
 }
 #command-area{
     font-size: 13px;
+    height: 32px;
 }
 
 ::-webkit-scrollbar {
   width: 0px;
+}
+
+#warning-text{
+    font-size: 12px;
+    color: #ff0325;
+    text-shadow: 0px 0px 7px #ff0325;
+}
+
+#inner-screen{
+    border: white solid 1px; 
+    height: 480px; 
+    width: 960px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    text-align: left; 
+    padding: 16px;
 }
 
 textarea[id="notepad-text-area"] {
@@ -26,7 +43,7 @@ textarea[id="notepad-text-area"] {
     text-shadow: 0px 0px 7px #fff;
     padding: 8px;
     border: #000 solid 0px;
-    background-image: url("https://bruno-rubim.neocities.org/images/notepad-paper.png");
+    background-image: url("/images/notepad-paper.png");
     resize: none;
     image-rendering: pixelated;
 }
@@ -35,7 +52,7 @@ div[id=screen-text] {
     height: 100%;
     font-size: 18px;
     text-shadow: 0px 0px 7px #fff;
-    cursor: url("../images/cursor-vertical-scroll.png"), default;
+    cursor: url("/images/cursor-vertical-scroll.png"), default;
     overflow: auto;
 }
 textarea:focus {
@@ -70,12 +87,16 @@ textarea:focus {
     text-shadow: 0px 0px 7px #160cfa;
 }
 .cyan{
-    color: #00daff;
-    text-shadow: 0px 0px 7px #00daff;
+    color: #00fb9c;
+    text-shadow: 0px 0px 7px #00fb9c;
 }
-.green{
+.lime{
     color: #41fc01;
     text-shadow: 0px 0px 7px #41fc01;
+}
+.green{
+    color: #01fc3a;
+    text-shadow: 0px 0px 7px #01fc3a;
 }
 @font-face {
     font-family: 'courier_primeregular';

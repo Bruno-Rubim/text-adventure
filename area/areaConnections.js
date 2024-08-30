@@ -4,6 +4,7 @@ import { trail } from "./instances/trail.js";
 import { treeSpot } from "./instances/treeSpot.js";
 import { cabinFront } from "./instances/cabinFront.js";
 import { cabinInside } from "./instances/cabinInside.js";
+import { voidRoom } from "./instances/voidRoom.js";
 
 export class AreaConnection {
     constructor({areaObject = null, distance = 0, references = [], description = ''}){

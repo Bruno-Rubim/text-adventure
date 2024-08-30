@@ -1,5 +1,4 @@
 import { tallStonesHill } from "../area/instances/tallStonesHill.js";
-import { voidRoom } from "../area/instances/voidRoom.js";
 import { upView } from "../gameObjects/upView.js";
 import { gameState } from "../gameState.js";
 import * as terminal from "../screen/terminal.js";
@@ -25,7 +24,7 @@ export const compareArrays = (array1, array2) => {
     return true;
 }
 
-const findObjectArea = (container, condition) => {
+export const findObjectContainer = (container, condition) => {
     if (container.content != null){
         for (let i = 0; i < container.content.length; i++) {
             if (condition(container.content[i])){
@@ -33,7 +32,7 @@ const findObjectArea = (container, condition) => {
             }
         }
         for (let i = 0; i < container.content.length; i++) {
-            let innerContainer = findObjectArea(container.content[i], condition);
+            let innerContainer = findObjectContainer(container.content[i], condition);
             if (innerContainer){
                 return innerContainer;
             }
@@ -53,12 +52,12 @@ const findObjectInventory = (condition) => {
 }
 
 export const findObjectGeneral = (condition) => {
-    let found = findObjectArea(gameState.currentArea, condition);
+    let found = findObjectContainer(gameState.currentArea, condition);
     if (!found) {
         found = findObjectInventory(condition);
     }
     if (!found) {
-        found = findObjectArea(upView, condition);
+        found = findObjectContainer(upView, condition);
     }
     return found;
 }
@@ -458,7 +457,7 @@ export const timeSkip = new Command({
 export const skip = new Command({
     keywords: ['skip'],
     execute: () => {
-        if (gameState.currentArea == voidRoom){
+        if (gameState.currentArea.name == 'void-room'){
             gameState.inventory = [];
             gameState.currentArea = tallStonesHill;
             clear.execute('');

@@ -10,10 +10,9 @@ export class Item extends GameObject {
             color: color,
         })
         this.everTaken = false;
-        this.cathergories.push['item'];
+        this.cathergories['type'] = 'item';
         this.taken = () => {
             let response = `You have taken the ` + this.referTo() + `.`;
-            console.log(response);
             return response;
         }
     }

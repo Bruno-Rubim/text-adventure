@@ -1,20 +1,18 @@
 import { Area } from "../area.js";
+import { GameObject } from "../../gameObjects/gameObject.js";
 import { Container } from "../../gameObjects/container.js";
 import { Item } from "../../gameObjects/item.js";
 import { gameState, getCurrentLight } from "../../gameState.js";
-import { GameObject } from "../../gameObjects/gameObject.js";
-import { findObjectContainer, findObjectGeneral } from "../../commands/commands.js";
-import { cabinFront } from "./cabinFront.js";
 
-export const trail = new Area();
+export const wellLocation = new Area();
 
-trail.name = `trail`;
-trail.references = ['path', 'crossroad'];
+wellLocation.name = `trail`;
+wellLocation.references = ['path', 'crossroad'];
 
 const ground = new Container({
     name: `ground`,
     references: ['floor', 'down'],
-    description: `A slender path of dirt.`,
+    description: `tbw.`,
 });
 ground.getContentDescription = () => {
     let contentDescription = '';
@@ -51,37 +49,17 @@ ground.getDescription = () => {
 ground.lookedAt = (gameState) => {
     gameState.globalTime += 1;
 }
-trail.content.push(ground);
+wellLocation.content.push(ground);
 
-trail.getDescription = () => {
+wellLocation.getDescription = () => {
     let dayVariables = {
         night: {
             '': ``,
-            'light': `, walking in the darkness.`,
-            'cabin': `goes into the darkness, where not too far off a small smudge of light can be seen.`,
-        },
-        day: {
-            '': ``,
-            'light': `.`,
-            'cabin': `leads to a small lonely cabin.`,
         },
     };
-    let wellPath = '';
-    let dayState = dayVariables[gameState.getDayStateSimple()];
-    let lanternInCabin = Boolean(findObjectContainer(cabinFront, (content) => content.references.includes('lantern')));
-    if (!lanternInCabin) {
-        dayVariables.night['cabin'] = `goes into the darkness to a lonely cabin.`;
-    }
-    if (getCurrentLight() != 'night'){
-        wellPath = '\nOff to another side you can make out a faded diversion on the path, where grass has grown over its markings'
-        if (getCurrentLight() == 'day'){
-            wellPath += ' pointing to a near well'
-        }
-        wellPath += '.'
-    }
-    let response = `You're on a trail in the grass` + dayState['light'] + ground.getContentDescription() + ` One side leads up to a tree on a small hill, the other ` + dayState['cabin'] + wellPath;
+    let response = `tbw`;
     return response;
 }
-trail.lookedAt = (gameState) => {
+wellLocation.lookedAt = (gameState) => {
     gameState.globalTime += 1;
 }

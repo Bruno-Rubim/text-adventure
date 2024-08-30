@@ -7,7 +7,7 @@ export class GameObject {
         this.parent = parent;
         this.wisdomKey = wisdomKey;
         this.references.push(this.name);
-        this.cathergories = [color];
+        this.cathergories = {'color': color};
     }
     referTo = () => {
         let cathergories = '';

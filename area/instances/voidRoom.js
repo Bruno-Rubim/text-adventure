@@ -8,6 +8,7 @@ import * as terminal from "../../screen/terminal.js"
 import { gameState } from "../../gameState.js";
 
 export const voidRoom = new Area();
+voidRoom.name = `void-room`;
 
 terminal.addTextToScreenQueue(`When unsure where you are, <b class=" command">look around</b>.`);
 
@@ -62,13 +63,14 @@ voidRoom.content.push(above);
 const abyss = new GameObject({
     name: 'abyss',
     references: [`abyss`, 'doorway'],
-    description: `A black rectangular shade stares back at you, the apparent lack of.content anything seems to pull you, inviting you to GO into it.`,
+    description: `A black rectangular shape stares back at you, the apparent lack of anything seems to pull you, inviting you to <b class="white">go</b> into it.`,
+    color: 'black',
 });
 
 const hole = new Lock({
     name: `hole`,
     references: ['slot', 'floor'],
-    description: `An oddly shapped hole, a little smaller than your hand, half as deep as it is wide. You could probably place something in it`, 
+    description: `An oddly shapped hole, a little smaller than your hand, half as deep as it is wide. You could probably <b class="white">place</b> something in it`, 
     key: 'rock', 
     failedUnlockDescription: `It doesn't fit`,
     parent: voidRoom.content,
@@ -92,8 +94,8 @@ hole.placed = (item) => {
 const outline = new GameObject({
     name: 'outline',
     references: ['outline'],
-    description: `A black rectangular outline standing on nothing, like a series of slits on space itself. Listening close, quiet drowning whispers can be heard coming from its gaps. In the very middle you notice a small hole.`,
-    color: 'black',
+    description: `A black rectangular outline standing on nothing, like a series of slits on space itself. Listening close, quiet drowning whispers can be heard coming from its gaps. In the very middle you notice a small ` + hole.referTo() + `.`,
+    color: 'white',
     parent: hole.content,
 })
 const gaps = new GameObject({
@@ -102,7 +104,7 @@ const gaps = new GameObject({
     parent: hole.content,
 })
 hole.content.push(outline, gaps);
-hole.unlockDescription = `You pick up the rock again and put it on the hole. Right before it touches the cavity, a strange force pulls it from your hand, clicking it in place. The dark ` + outline.referTo() + ` fills with an empty black void, swallowing the hole and becoming a doorway to the ABYSS`;
+hole.unlockDescription = `You pick up the rock again and put it on the hole. Right before it touches the cavity, a strange force pulls it from your hand, clicking it in place. The dark ` + outline.referTo() + ` fills with an empty black void, swallowing the hole and becoming a doorway to the ` + abyss.referTo() + `.`;
 
 const table = new Container({
     name: `table`,
@@ -131,6 +133,15 @@ table.getDescription = () => {
     return response;
 }
 
+const rock = new Item({
+    name: 'rock',
+    description: `An oddly shaped sturdy grey rock, like a large pebble, almost taking up your entire palm. Holding it you feel like you could <b class="white">hit</b> something <b class="white">with</b> it.`,
+    references: ['pebble']
+});
+rock.canBreak = true;
+rock.parent = gameState.inventory;
+gameState.inventory.push(rock);
+
 const gem = new Item({
     name: 'gem',
     references: ['gem', 'crystal'],
@@ -140,8 +151,10 @@ const gem = new Item({
 gem.hitDescription = `You try hitting it with your hands but nothing happens to it. Maybe if it's hit with something sturdier and less afraid of pain something different would happen.`
 gem.broken = () => {
     voidRoom.content.push(hole);
+    rock.cathergories['color'] = 'cyan';
+    rock.description = `An oddly shaped sturdy gray rock with a <b class="cyan">sprial symbol</b>. It doesn't move but you can feel its silent pleas to perish.`
     gem.delete();
-    return `You pick the gem with one hand and the rock with the other, without hesitation you smash both together. The noise of its material shattering pierces within your head. What was once shining safely in your hands is now a scattered dozen shards that quickly evaporate out of view.\nOn the opposite side of the table, a rectangular ` + outline.referTo() + ` forms seemingly standing on thin air, with a ` + hole.referTo() + ` in the middle of it.`;
+    return `You pick the gem up with one hand and the rock with the other. Without hesitation you smash both together. \nThe noise of the crystal shattering pierces within your head, what was once shining safely in your hands is now a scattered dozen fragments that quickly evaporate out of view. Something was etched on the ` + rock.referTo()+ `.\n\nOn the opposite side of the table, a rectangular ` + outline.referTo() + ` forms seemingly standing on thin air, with a ` + hole.referTo() + ` in the middle of it.`;
 };
 gem.hit = (weapon) => {
     let result = gem.hitDescription;
@@ -163,12 +176,12 @@ voidRoom.getDescription = () =>{
         firstLook = false;
         return response;
     }
-    response += ` There's a black TABLE in front of you`
+    response += ` There's a black ` + table.referTo() +` in front of you`
     if (voidRoom.content.includes(hole)){
-        response += `, and behind it a black OUTLINE`;
+        response += `, and behind it a black ` + outline.referTo() +``;
     }
     response += `.`
     return response;
 }
 
-voidRoom.name = `void-room`;
+gameState.currentArea = voidRoom;

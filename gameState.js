@@ -1,23 +1,14 @@
-import { voidRoom } from "./area/instances/voidRoom.js";
 import { findObjectGeneral } from "./commands/commands.js";
 import { Item } from "./gameObjects/item.js";
 
-const rock = new Item({
-    name: 'rock',
-    description: `An oddly shaped sturdy grey rock, like a large pebble, almost taking up your entire palm. Holding it you feel like you could <b class="white">hit</b> something <b class="white">with</b> it.`,
-    references: ['pebble']
-});
-rock.canBreak = true;
-
 export const gameState = {
-    currentArea: voidRoom,
-    inventory: [rock],
+    currentArea: null,
+    inventory: [],
     globalTime: 239,
     lookedAt: [],
     timedEvents: [],
     weather: 'windy',
 }
-rock.parent = gameState.inventory;
 
 gameState.gainWisdom = (word) => {
     if (!gameState.lookedAt.includes(word)){
@@ -125,6 +116,6 @@ export const checkTimedEvents = () => {
 const realTimeAdd = () => {
     gameState.globalTime += 1;
     checkTimedEvents();
-    setTimeout(realTimeAdd, 1000);
+    setTimeout(realTimeAdd, 15000);
 }
 realTimeAdd();

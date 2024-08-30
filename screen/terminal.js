@@ -6,7 +6,7 @@ export const input = document.querySelector("#input-text");
 
 let wrirtingInScreen = false;
 let screenTextQueue = [];
-let writingDelay = 25;
+let writingDelay = 1;
 
 export const setWritingDelay = (num) => {
     writingDelay = num;
@@ -30,7 +30,7 @@ const updateScreen = () => {
 }
 
 export const addTextToScreenQueue = (text) => {
-    screenTextQueue.push(text);
+    screenTextQueue.push(text.replace('\n', '<br>'));
     updateScreen();
 }
 

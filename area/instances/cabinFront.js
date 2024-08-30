@@ -65,7 +65,7 @@ cabinFront.content.push(hook);
 
 const lantern = new Item({
     name: 'lantern',
-    description: 'An old looking lantern, inside the glass a orange rock glows, illuminating your immediate surroundings.',
+    description: 'An old looking lantern, inside the glass a orange rock glows, illuminating your immediate surroundings. From it a faint warmth can be felt when touching its glass chaimber.',
     parent: hook.content,
     color: 'orange',
 });
