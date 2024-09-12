@@ -1,5 +1,5 @@
 export class GameObject {
-    constructor({name = '', description = '', references = [], parent = null, wisdomKey = name, color = 'white'}){
+    constructor({name = '', description = 'a ' + name, references = [], parent = null, wisdomKey = name, color = 'white'}){
         this.name = name;
         this.content = null;
         this.description = description;
@@ -21,6 +21,7 @@ export class GameObject {
     }
     lookedAt = (gameState) => {
         gameState.gainWisdom(this.wisdomKey);
+        gameState.globalTime++;
     }
     delete = () => {
         for (let i = 0; i < this.parent.length; i++) {

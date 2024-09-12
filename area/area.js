@@ -4,9 +4,14 @@ export class Area {
         this.content = [];
         this.neighbourAreas = [];
         this.description = '';
-        this.position = [];
     }
     getDescription = () => {
         return this.description;
+    }
+    startWith = (objectArray) => {
+        for (const object of objectArray){
+            object.parent = this.content;
+            this.content.push(object);
+        }
     }
 }

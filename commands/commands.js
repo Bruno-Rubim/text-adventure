@@ -1,4 +1,4 @@
-import { tallStonesHill } from "../area/instances/tallStonesHill.js";
+import { menu } from "../area/instances/menu.js";
 import { upView } from "../gameObjects/upView.js";
 import { gameState } from "../gameState.js";
 import * as terminal from "../screen/terminal.js";
@@ -94,9 +94,33 @@ const solveWords = (originalWords, action) => {
 
 //player commands
 
+export const help = new Command({
+    keywords: ['help', 'h'],
+    execute: (words) => {
+        if (!words.length || (words[0] == "commands" || words[0] == "command")){
+            terminal.addTextToScreenQueue(`Here is a list of basic commands:\nLook\nTake\nPlace\nInventory\nGo\nHit\nClear\n<b class="red">Start</b>\n\nType: HELP [COMMAND] to get a description of a command`);
+            return
+        }
+        if (words[0] == "[command]"){
+            terminal.writeInWarning("So funny aren't you");
+            return
+        }
+        let command = commandList.find(command => command.keywords.includes(words[0]));
+        if (!command){
+            terminal.writeInWarning("That command does not exist");
+            return;
+        }
+        command.execute(['help']);
+    }
+})
+
 export const look = new Command({
     keywords: ['look', 'inspect', 'check', 'examine', 'describe', 'l', 'x'],
     execute: (words) => {
+        if (words[0] == 'help') {
+            terminal.addTextToScreenQueue("Look\nGives you the description of your current area.\n\nLook [subject]\nGives you the description of an object.");
+            return 
+        }
         if (words[0] == 'inventory') {
             inventory.execute([]);
             return;
@@ -143,7 +167,11 @@ export const take = new Command({
             terminal.writeInWarning("Take what?");
             return;
         }
-        let solvedWords = solveWords(words, findObjectGeneral);
+        if (words[0] == 'help') {
+            terminal.addTextToScreenQueue("Take [subject]\nPlaces an item from the area in your inventory.");
+            return 
+        }
+       let solvedWords = solveWords(words, findObjectGeneral);
         let target = solvedWords[0];
         if (!target) {
             terminal.writeInWarning('No ' + words + ' was found');
@@ -172,6 +200,10 @@ export const place = new Command({
         if (words.length == 0) {
             terminal.writeInWarning("Place what?");
             return;
+        }
+        if (words[0] == 'help') {
+            terminal.addTextToScreenQueue("Place [subject] [target]\nPlaces an item from your inventory in a container.");
+            return 
         }
         if (words.length == 1) {
             terminal.writeInWarning("Place " + words + " where?");
@@ -214,6 +246,10 @@ export const place = new Command({
 export const inventory = new Command({
     keywords: ['inventory', 'inventry', 'i'],
     execute: (words) => {
+        if (words[0] == 'help') {
+            terminal.addTextToScreenQueue("Inventory\nShows you what items you are carrying.");
+            return 
+        }
         if (gameState.inventory.length == 0){
             terminal.addTextToScreenQueue('Your inventory is empty.');
             return
@@ -234,6 +270,10 @@ export const drop = new Command({
             terminal.writeInWarning("Drop what?");
             return;
         }
+        if (words[0] == 'help') {
+            terminal.addTextToScreenQueue("Drop [subject]\nPlaces an item from your inventory on the ground.");
+            return 
+        }
         if (words.length > 1) {
             for (let i = 1; i < words.length; i++){
                 words[0] += ' ' + words[i];
@@ -243,7 +283,6 @@ export const drop = new Command({
         let target = solvedWords[0];
         if (target){
             let ground = solveWords(['ground'], findObjectGeneral)[0];
-            console.log(ground);
             target.moveTo(ground.content);
             terminal.addTextToScreenQueue('You placed the ' + words[0] + ' is on the ground.');
             return;
@@ -258,6 +297,10 @@ export const go = new Command({
         if (words.length == 0) {
             terminal.writeInWarning('Go where?');
             return;
+        }
+        if (words[0] == 'help') {
+            terminal.addTextToScreenQueue("Go [area]\nMoves you to an accessible area.");
+            return 
         }
         if (!gameState.currentArea.neighbourAreas.length > 0){
             terminal.writeInWarning('There is nowhere to go');
@@ -304,6 +347,10 @@ export const hit = new Command({
         if (words.length == 0) {
             terminal.writeInWarning('Hit what?');
             return;
+        }
+        if (words[0] == 'help') {
+            terminal.addTextToScreenQueue("Hit [subject] [subject]\nHits two objects together.");
+            return 
         }
         let solvedWords = solveWords(words, findObjectGeneral);
         let object1 = solvedWords[0];
@@ -428,6 +475,11 @@ export const clear = new Command({
     execute: (words) => {
         if (words.length == 0){
             terminal.screenText.innerHTML = '';
+            terminal.writeInWarning("&nbsp;");
+            return;
+        }
+        if (words[0] = 'help') {
+            terminal.addTextToScreenQueue("Clear\nClears the screen text.");
         }
     }
 });
@@ -482,6 +534,44 @@ export const speed = new Command({
     }
 })
 
+export const start = new Command({
+    keywords: ['start', 'st'],
+    execute: (words) => {
+        if (!words.length) {
+            terminal.writeInWarning("Start what?");
+            return
+        }
+        if (words[0] == 'help') {
+            terminal.addTextToScreenQueue(`Type START GAME to start the game\n<b class="black">The menu is currently being worked on, to start game just clear the screen and look around.\nYou can still use the help function.</b>`);
+            return
+        }
+        if (words[0] == 'game') {
+            terminal.addTextToScreenQueue("Starting game...");
+            gameState.currentArea = gameState.pausedFrom;
+            look.execute();
+            return
+        }
+    }
+})
+
+export const pause = new Command({
+    keywords: ['pause', 'menu'],
+    execute: (words) => {
+        if (words.length && words[0] == 'help'){
+            terminal.addTextToScreenQueue("Takes you to the menu screen.");
+            return;
+        }
+        if (gameState.currentArea != menu){
+            gameState.pausedFrom = gameState.currentArea;
+            gameState.currentArea = menu;
+            clear.execute();
+        } else {
+            terminal.writeInWarning("You're on the menu");
+        }
+    }
+})
+
 export const commandList = [
-    look, take, clear, inventory, drop, time, go, hit, place, skip, read, climb, use, leave, enter, timeSkip, blow, speed
+    help, look, take, clear, inventory, drop, time, go, hit, place, read, climb, use, leave, enter, timeSkip, blow, speed, start
 ]
+//skip is temporarily removed

@@ -6,7 +6,7 @@ export const input = document.querySelector("#input-text");
 
 let wrirtingInScreen = false;
 let screenTextQueue = [];
-let writingDelay = 1;
+let writingDelay = 25;
 
 export const setWritingDelay = (num) => {
     writingDelay = num;
@@ -16,7 +16,7 @@ const updateScreen = () => {
     let text = '';
     if (!wrirtingInScreen) {
         while (screenTextQueue.length){
-            text += screenTextQueue.shift().replace("\n", "<br>") + '<br><br>';
+            text += screenTextQueue.shift() + '<br><br>';
         }
         if (text != '') {
             wrirtingInScreen = true;
@@ -30,7 +30,7 @@ const updateScreen = () => {
 }
 
 export const addTextToScreenQueue = (text) => {
-    screenTextQueue.push(text.replace('\n', '<br>'));
+    screenTextQueue.push(text.replaceAll('\n', '<br>'));
     updateScreen();
 }
 
@@ -50,12 +50,15 @@ const insertTextFragment = (textObject) => {
 let universalIdCounter = 0;
 const typeWriterEffect = (originalTarget, text) => {
     let currentFragment = '';
+    let insertDelay = writingDelay;
+    let totalDelay = 0;
     let fragmentCount = 0;
     let targetArray = [originalTarget.id];
     let targetIndex = 0;
     let nextTargetIndex = 0;
     let textArray = [];
     let lastText = false;
+    let currentTag = '';
     for(let textIndex = 0; textIndex < text.length; textIndex++){
         currentFragment = text[textIndex];
         let hasId = false;
@@ -71,23 +74,30 @@ const typeWriterEffect = (originalTarget, text) => {
                     nextTargetIndex = targetArray.length;
                     targetArray.push(id);
                 }
+                currentTag = currentFragment;
                 if (text[textIndex] == "/" && !hasId){
                     nextTargetIndex = 0;
                 }
             } while (text[textIndex] != ">");
         }
+        if (currentTag == '<br>' || currentTag.includes('/')){
+            currentTag = '';
+        }
         if (textIndex == text.length - 1) {
             lastText = true;
         }
-        if(currentFragment == "<br>"){
-            fragmentCount --;
+        if (currentTag.includes('h1')){
+            insertDelay = 250;
+        } else {
+            insertDelay = writingDelay;
         }
         textArray.push({
             target: targetArray[targetIndex],
             fragment: currentFragment,
-            delay: writingDelay * fragmentCount,
+            delay: insertDelay  + totalDelay,
             isLast: lastText,
         })
+        totalDelay += insertDelay;
         targetIndex = nextTargetIndex;
         if (text[textIndex] == ","){
             fragmentCount += 7;
@@ -151,3 +161,5 @@ input.addEventListener("keyup", function(event) {
         }
     }
 });
+
+addTextToScreenQueue(`Welcome to<h1 > GAME NAME </h1> type HELP and hit ENTER for command list!`);

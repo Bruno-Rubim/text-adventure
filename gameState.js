@@ -1,13 +1,16 @@
 import { findObjectGeneral } from "./commands/commands.js";
-import { Item } from "./gameObjects/item.js";
+import { menu } from "./area/instances/menu.js";
+import { startingRoom } from "./area/instances/firstArea.js";
 
 export const gameState = {
-    currentArea: null,
+    currentArea: startingRoom,
+    pausedFrom: null,
     inventory: [],
     globalTime: 239,
     lookedAt: [],
     timedEvents: [],
     weather: 'windy',
+    fieldState: '',
 }
 
 gameState.gainWisdom = (word) => {

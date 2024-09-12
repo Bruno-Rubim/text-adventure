@@ -86,6 +86,10 @@ textarea:focus {
     color: #160cfa;
     text-shadow: 0px 0px 7px #160cfa;
 }
+.cerulean{
+    color: #016efa;
+    text-shadow: 0px 0px 7px #016efa;
+}
 .cyan{
     color: #00fb9c;
     text-shadow: 0px 0px 7px #00fb9c;

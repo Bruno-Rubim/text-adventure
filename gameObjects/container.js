@@ -1,7 +1,7 @@
 import { GameObject } from "./gameObject.js";
 
 export class Container extends GameObject {
-    constructor({name = '', references = [name], description = '', content = [], limit = 6}){
+    constructor({name = '', references = [], description = 'a ' + name, content = [], limit = 6}){
         super({
             name: name,
             references: references,
@@ -9,6 +9,7 @@ export class Container extends GameObject {
         })
         this.content = content;
         this.limit = limit;
+        this.references.push(name);
     }
     getDescription = () => {
         let response = this.description;
@@ -32,5 +33,11 @@ export class Container extends GameObject {
     }
     placed = (object) => {
         return "You have placed the " + object.name + " on the " + this.name;
+    }
+    startWith = (objectArray) => {
+        for (const object of objectArray){
+            object.parent = this.content;
+            this.content.push(object);
+        }
     }
 }

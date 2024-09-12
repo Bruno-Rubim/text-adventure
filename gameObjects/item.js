@@ -1,7 +1,7 @@
 import { GameObject } from "./gameObject.js";
 
 export class Item extends GameObject {
-    constructor({name = '', references = [name], description = '', parent = null, color = "white"}){
+    constructor({name = '', references = [name], description = 'a ' + name, parent = null, color = "white"}){
         super({
             name: name,
             references: references,

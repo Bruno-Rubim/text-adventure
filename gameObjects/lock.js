@@ -1,9 +1,10 @@
 import { GameObject } from "./gameObject.js";
 
 export class Lock extends GameObject {
-    constructor({name = '', description = '', key = '', unlockDescription = '', failedUnlockDescription = '', content = []}){
+    constructor({name = '', description = 'a ' + name, key = '', unlockDescription = '', failedUnlockDescription = '', content = [], references = []}){
         super({
             name: name,
+            references: references,
             description: description,
         })
         this.key = key;
