@@ -8,6 +8,7 @@ export class GameObject {
         this.wisdomKey = wisdomKey;
         this.references.push(this.name);
         this.cathergories = {'color': color};
+        this.everSeen = false;
     }
     referTo = () => {
         let cathergories = '';
@@ -20,6 +21,7 @@ export class GameObject {
         return this.description;
     }
     lookedAt = (gameState) => {
+        this.everSeen = true;
         gameState.gainWisdom(this.wisdomKey);
         gameState.globalTime++;
     }

@@ -62,7 +62,7 @@ export const findObjectGeneral = (condition) => {
     return found;
 }
 
-const findNeighbourtArea = (condition) => {
+const findNeighbourArea = (condition) => {
     if (!gameState.currentArea.neighbourAreas.length > 0){
         return;
     }
@@ -136,7 +136,7 @@ export const look = new Command({
             target = solvedWords[0];
         }
         if (!target) {
-            solvedWords = solveWords(words, findNeighbourtArea);
+            solvedWords = solveWords(words, findNeighbourArea);
             target = solvedWords[0];
             if (!target) {
                 terminal.writeInWarning('No ' + words[0] + ' was found');
@@ -306,7 +306,7 @@ export const go = new Command({
             terminal.writeInWarning('There is nowhere to go');
             return;
         }
-        const solvedWords = solveWords(words, findNeighbourtArea);
+        const solvedWords = solveWords(words, findNeighbourArea);
         const target = solvedWords[0];
         if (!target){
             terminal.writeInWarning('No ' + words + ' was found');
@@ -315,7 +315,8 @@ export const go = new Command({
         terminal.addTextToScreenQueue(target.description);
         gameState.currentArea = target.areaObject;
         gameState.globalTime += target.distance;
-        if (!target.everSeen){
+        console.log(gameState.currentArea)
+        if (!gameState.currentArea.everSeen){
             look.execute([]);
         }
     }
@@ -336,8 +337,10 @@ export const enter = new Command({
     execute: (words) => {
         if (words.length == 0) {
             go.execute(['inside']);
+        } else {
+            go.execute(words);
         }
-        return
+        return;
     }
 })
 
@@ -454,13 +457,99 @@ export const climb = new Command({
             return;
         }
         if (!target.climbed){
-            terminal.writeInWarning(`You can't climb the` + target.name);
+            terminal.writeInWarning(`You can't climb the ` + target.name);
             return;
         }
-        terminal.addTextToScreenQueue(target.climbed());
+        let answer = target.climbed();
+        if (answer) {
+            terminal.addTextToScreenQueue(answer);
+        }
         return
     }
 })
+
+export const open = new Command({
+    keywords: ['open'],
+    execute: (words) => {
+        if (words.length == 0) {
+            terminal.writeInWarning('Open what?');
+            return;
+        }
+        if (words.length > 1) {
+            for (let i = 1; i < words.length; i++){
+                words[0] += ' ' + words[i];
+            }
+        }
+        let objects = solveWords(words, findObjectGeneral);
+        let target = objects[0];
+        if (!target){
+            terminal.writeInWarning(`No object was found`);
+            return;
+        }
+        if (!target.opened){
+            terminal.writeInWarning(`You can't open the ` + target.name);
+            return;
+        }
+        terminal.addTextToScreenQueue(target.opened());
+        return
+    }
+})
+
+export const close = new Command({
+    keywords: ['close'],
+    execute: (words) => {
+        if (words.length == 0) {
+            terminal.writeInWarning('Open what?');
+            return;
+        }
+        if (words.length > 1) {
+            for (let i = 1; i < words.length; i++){
+                words[0] += ' ' + words[i];
+            }
+        }
+        let objects = solveWords(words, findObjectGeneral);
+        let target = objects[0];
+        if (!target){
+            terminal.writeInWarning(`No object was found`);
+            return;
+        }
+        if (!target.closed){
+            terminal.writeInWarning(`You can't close the ` + target.name);
+            return;
+        }
+        terminal.addTextToScreenQueue(target.closed());
+        return
+    }
+})
+
+export const lay = new Command({
+    keywords: ['lay', 'sleep'],
+    execute: (words) => {
+        if (words.length == 0) {
+            terminal.writeInWarning('Lay where?');
+            return;
+        }
+        if (words.length > 1) {
+            for (let i = 1; i < words.length; i++){
+                words[0] += ' ' + words[i];
+            }
+        }
+        let objects = solveWords(words, findObjectGeneral);
+        let target = objects[0];
+        if (!target){
+            terminal.writeInWarning(`No object was found`);
+            return;
+        }
+        if (!target.layedOn){
+            terminal.writeInWarning(`You can't lay on the ` + target.name);
+            return;
+        }
+        terminal.addTextToScreenQueue(target.layedOn());
+        return
+    }
+})
+
+// meta
 
 export const use = new Command({
     keywords: ['use', 'u'],
@@ -572,6 +661,6 @@ export const pause = new Command({
 })
 
 export const commandList = [
-    help, look, take, clear, inventory, drop, time, go, hit, place, read, climb, use, leave, enter, timeSkip, blow, speed, start
+    help, look, take, clear, inventory, drop, time, go, hit, place, read, climb, use, leave, enter, timeSkip, blow, speed, start, open, close, lay
 ]
 //skip is temporarily removed

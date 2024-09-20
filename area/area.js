@@ -1,9 +1,12 @@
 export class Area {
-    constructor(){
-        this.name = ''
-        this.content = [];
-        this.neighbourAreas = [];
-        this.description = '';
+    constructor({name = '', references = [], content = [], neighbourAreas = [], description = ''}){
+        this.name = name;
+        this.references = references;
+        this.content = content;
+        this.neighbourAreas = neighbourAreas;
+        this.description = description;
+        this.references.push(name);
+        this.everSeen = false;
     }
     getDescription = () => {
         return this.description;
@@ -13,5 +16,10 @@ export class Area {
             object.parent = this.content;
             this.content.push(object);
         }
+    }
+    lookedAt = (gameState) => {
+        this.everSeen = true;
+        gameState.gainWisdom(this.wisdomKey);
+        gameState.globalTime++;
     }
 }

@@ -6,7 +6,7 @@ export const input = document.querySelector("#input-text");
 
 let wrirtingInScreen = false;
 let screenTextQueue = [];
-let writingDelay = 25;
+let writingDelay = 40;
 
 export const setWritingDelay = (num) => {
     writingDelay = num;
@@ -52,7 +52,6 @@ const typeWriterEffect = (originalTarget, text) => {
     let currentFragment = '';
     let insertDelay = writingDelay;
     let totalDelay = 0;
-    let fragmentCount = 0;
     let targetArray = [originalTarget.id];
     let targetIndex = 0;
     let nextTargetIndex = 0;
@@ -91,6 +90,16 @@ const typeWriterEffect = (originalTarget, text) => {
         } else {
             insertDelay = writingDelay;
         }
+        if (currentFragment == "_"){
+            insertDelay *= 45;
+            currentFragment = '';
+        }
+        if (text[textIndex - 1] == ","){
+            insertDelay *= 7;
+        }
+        if (text[textIndex - 1] == "."){
+            insertDelay *= 10;
+        }
         textArray.push({
             target: targetArray[targetIndex],
             fragment: currentFragment,
@@ -99,13 +108,6 @@ const typeWriterEffect = (originalTarget, text) => {
         })
         totalDelay += insertDelay;
         targetIndex = nextTargetIndex;
-        if (text[textIndex] == ","){
-            fragmentCount += 7;
-        }
-        if (text[textIndex] == "."){
-            fragmentCount += 10;
-        }
-        fragmentCount++;
     }
     while (textArray.length > 0){
         insertTextFragment(textArray[0]);
@@ -162,4 +164,4 @@ input.addEventListener("keyup", function(event) {
     }
 });
 
-addTextToScreenQueue(`Welcome to<h1 > GAME NAME </h1> type HELP and hit ENTER for command list!`);
+addTextToScreenQueue(`Welcome to<h1 > GAME NAME </h1> Type HELP and hit ENTER for command list!`);

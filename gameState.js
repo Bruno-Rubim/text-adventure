@@ -1,16 +1,15 @@
 import { findObjectGeneral } from "./commands/commands.js";
-import { menu } from "./area/instances/menu.js";
-import { startingRoom } from "./area/instances/firstArea.js";
+import { houseInside } from "./area/instances/houseInside.js";
 
 export const gameState = {
-    currentArea: startingRoom,
+    currentArea: houseInside,
     pausedFrom: null,
     inventory: [],
     globalTime: 239,
     lookedAt: [],
     timedEvents: [],
     weather: 'windy',
-    fieldState: '',
+    playerLaying: false,
 }
 
 gameState.gainWisdom = (word) => {
@@ -87,12 +86,11 @@ gameState.getDayStateSimple = () => {
     }
 }
 
-export const getCurrentLight = () => {
+gameState.getCurrentLight = () => {
     const source = findObjectGeneral((content) => content.lightSource);
     if (source) {
-        return source;
+        return source.name;
     }
-    console.log(gameState.getDayStateSimple());
     return gameState.getDayStateSimple();
 }
 
