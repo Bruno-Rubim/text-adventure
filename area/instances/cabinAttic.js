@@ -4,11 +4,10 @@ import { GameObject } from "../../gameObjects/gameObject.js";
 import { Item } from "../../gameObjects/item.js";
 import { gameState } from "../../gameState.js";
 
-export const houseAttic = new Area({
+export const cabinAttic = new Area({
     name: 'attic',
-    references: ['hatch', 'ceiling', 'ceiling hatch', 'inside']
 });
-houseAttic.getDescription = () => {
+cabinAttic.getDescription = () => {
     let currentLight = gameState.getCurrentLight();
     const descriptionVariables = {
         'light' : {
@@ -50,7 +49,7 @@ floor.getDescription = () => {
 
 const lantern = new Item({
     name: 'lantern',
-    description: 'An old looking lantern, inside the glass a orange rock glows, illuminating your immediate surroundings. From it a faint warmth can be felt when touching its glass chaimber.',
+    description: 'An old looking lantern, inside the glass is a bright orange candle, illuminating your immediate surroundings. From it a faint warmth can be felt when touching its glass chaimber.',
     parent: floor.content,
     color: 'orange',
 });    
@@ -58,6 +57,6 @@ lantern.lightSource = true;
 
 floor.content.push(lantern);
 
-const hatch = new GameObject({name: 'hatch', references: ['ceiling hatch'], description: 'Looking through the hatch you can see the inside of the house.'});
+const hatch = new GameObject({name: 'hatch', references: ['ceiling hatch'], description: 'Looking through the hatch you can see the inside of the cabin.'});
 
-houseAttic.startWith([floor, ceiling, hatch]);
+cabinAttic.startWith([floor, ceiling, hatch]);

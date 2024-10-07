@@ -1,15 +1,15 @@
 import { findObjectGeneral } from "./commands/commands.js";
-import { houseInside } from "./area/instances/houseInside.js";
+import { cabinInside } from "./area/instances/cabinInside.js";
 
 export const gameState = {
-    currentArea: houseInside,
+    currentArea: cabinInside,
     pausedFrom: null,
     inventory: [],
-    globalTime: 239,
+    globalTime: 329,
     lookedAt: [],
     timedEvents: [],
     weather: 'windy',
-    playerLaying: false,
+    playerPosition: 'standing',
 }
 
 gameState.gainWisdom = (word) => {
@@ -94,7 +94,7 @@ gameState.getCurrentLight = () => {
     return gameState.getDayStateSimple();
 }
 
-export const addTimedEvent = (event) => {
+gameState.addTimedEvent = (event) => {
     gameState.timedEvents.push({
         triggerTime: event.time,
         eventAction: event.action
@@ -102,7 +102,7 @@ export const addTimedEvent = (event) => {
     gameState.timedEvents.sort((a, b) => a.triggerTime - b.triggerTime);
 }
 
-export const checkTimedEvents = () => {
+gameState.checkTimedEvents = () => {
     let i = 0;
     for (let event of gameState.timedEvents){
         if (gameState.globalTime < event.triggerTime){
@@ -116,7 +116,7 @@ export const checkTimedEvents = () => {
 
 const realTimeAdd = () => {
     gameState.globalTime += 1;
-    checkTimedEvents();
+    gameState.checkTimedEvents();
     setTimeout(realTimeAdd, 15000);
 }
 realTimeAdd();

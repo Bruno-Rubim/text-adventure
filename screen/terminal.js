@@ -86,7 +86,7 @@ const typeWriterEffect = (originalTarget, text) => {
             lastText = true;
         }
         if (currentTag.includes('h1')){
-            insertDelay = 250;
+            insertDelay = 100;
         } else {
             insertDelay = writingDelay;
         }

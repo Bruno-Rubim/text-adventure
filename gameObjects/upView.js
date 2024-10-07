@@ -12,7 +12,7 @@ sky.getDescription = () => {
     let dayVariables = {
         dusk: {
             '': ``,
-            'sky': `A vast dark canvas of pitch black covers the sky. You see the two moons, slowly inching towards the horizon as the moments seem to pass by.One smaller accompanying the bigger one, enjoying each other's presence while it still lasts.`,
+            'sky': `A vast dark canvas of pitch black covers the sky. You see a far, white glowing orb, high in the sky, it seems to be made of pure light itself.`,
         },
         sunrise:{
             '':``,
@@ -43,7 +43,8 @@ sky.getDescription = () => {
             'sky':`to be written.`,
         },
     };
-    let response = dayVariables[dayState]['sky'];
+    //let response = dayVariables[dayState]['sky'];
+    let response = `A vast dark canvas of pitch black covers the sky. You see a far, white glowing orb, high in the sky, it seems to be made of pure light itself.`;
     return response;
 }
 

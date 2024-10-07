@@ -10,7 +10,7 @@ class Command {
     }
 }
 
-//general commands
+//general functions
 
 export const compareArrays = (array1, array2) => {
     if (array1.length != array2.length){
@@ -215,18 +215,28 @@ export const place = new Command({
             terminal.writeInWarning(`No matching target`);
             return;
         }
-        let name = target.name[0].toUpperCase() + target.name.substring(1);
+        let targetName = target.name[0].toUpperCase() + target.name.substring(1);
         if (!target.placed) {
-            terminal.writeInWarning(name + ` can't contain items`);
+            terminal.writeInWarning(targetName + ` can't contain items`);
             return;
         }
         if (!target.content.length > target.limit) {
-            terminal.writeInWarning(name + ` can't hold more items`);
+            terminal.writeInWarning(targetName + ` can't hold more items`);
             return;
         }
         let subject = solvedWords[0];
         if (!subject) {
             terminal.writeInWarning(`No matching subject`);
+            return;
+        }
+        if (subject == target){
+            terminal.writeInWarning(`You can't place something on itself`);
+            return;
+        }
+        let subjectName = subject.name[0].toUpperCase() + subject.name.substring(1);
+        if (!subject.taken){
+            console.log(subject);
+            terminal.writeInWarning(`You can't take ` + subjectName);
             return;
         }
         let result = target.placed(subject);
@@ -302,10 +312,12 @@ export const go = new Command({
             terminal.addTextToScreenQueue("Go [area]\nMoves you to an accessible area.");
             return 
         }
+        /*
         if (!gameState.currentArea.neighbourAreas.length > 0){
             terminal.writeInWarning('There is nowhere to go');
             return;
         }
+        */
         const solvedWords = solveWords(words, findNeighbourArea);
         const target = solvedWords[0];
         if (!target){
@@ -315,7 +327,7 @@ export const go = new Command({
         terminal.addTextToScreenQueue(target.description);
         gameState.currentArea = target.areaObject;
         gameState.globalTime += target.distance;
-        console.log(gameState.currentArea)
+        gameState.playerPosition = 'standing';
         if (!gameState.currentArea.everSeen){
             look.execute([]);
         }
@@ -475,23 +487,22 @@ export const open = new Command({
             terminal.writeInWarning('Open what?');
             return;
         }
-        if (words.length > 1) {
-            for (let i = 1; i < words.length; i++){
-                words[0] += ' ' + words[i];
-            }
-        }
         let objects = solveWords(words, findObjectGeneral);
-        let target = objects[0];
-        if (!target){
+        let lock = objects[0];
+        let key = objects[1];
+        if (key && lock) {
+            place.execute([key.name, lock.name]);
+            return
+        }
+        if (!lock){
             terminal.writeInWarning(`No object was found`);
             return;
         }
-        if (!target.opened){
-            terminal.writeInWarning(`You can't open the ` + target.name);
+        if (!lock.opened){
+            terminal.writeInWarning(`You can't open the ` + lock.name);
             return;
         }
-        terminal.addTextToScreenQueue(target.opened());
-        return
+        terminal.addTextToScreenQueue(lock.opened());
     }
 })
 
@@ -574,7 +585,7 @@ export const clear = new Command({
 });
 
 export const time = new Command({
-    keywords: ['time', 'hours', '5'],
+    keywords: ['time', 'hours', 'hour', '5'],
     execute: (words) => {
         if (words.length == 0){
             terminal.addTextToScreenQueue('It is ' + gameState.getHours(gameState.globalTime));

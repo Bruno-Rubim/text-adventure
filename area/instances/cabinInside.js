@@ -4,18 +4,21 @@ import { Item } from "../../gameObjects/item.js";
 import { Lock } from "../../gameObjects/lock.js";
 import { GameObject } from "../../gameObjects/gameObject.js";
 import { AreaConnection } from "../areaConnection.js";
-import { houseAttic } from "./houseAttic.js";
+import { cabinAttic } from "./cabinAttic.js";
 import { go } from "../../commands/commands.js";
-import { houseOutside } from "./houseOutside.js";
+import { cabinOutside } from "./cabinOutside.js";
 import { gameState } from "../../gameState.js";
+import { sampleEnd } from "./sampleEnd.js";
 
-export const houseInside = new Area({name: 'house'});
-houseInside.description = `You're in a small room, there's a makeshift bed against a wall, a door on the opposite side and a window in another wall over a wooden desk.`;
+export const cabinInside = new Area({
+    name: 'cabin'
+});
+cabinInside.description = `You're in a small room, there's a makeshift bed against a wall, a door on the opposite side and a window in another wall over a wooden desk.`;
 
 const ground = new Container({name: 'ground', references:['floor', 'down'], description:`Wood floorboards.`});
 const ceiling = new Container({name: 'ceiling', references:['sky', 'up'], description:`There's a hatch on the ceiling`});
 
-const houseKey = new Item({name: 'house key', references:['key'], description: 'A small metalic key.', color: 'yellow'});
+const cabinKey = new Item({name: 'cabin key', references:['key'], description: 'A small metalic key.', color: 'yellow'});
 
 const drawer = new Container({name: 'drawer', description: 'A small drawer with a simple handle.'});
 drawer.getDescription = () => {
@@ -38,24 +41,27 @@ drawer.getDescription = () => {
     response += '.';
     return response;
 }
-drawer.startWith([houseKey]);
+drawer.startWith([cabinKey]);
 
 const door = new Lock({
-    name: 'house door',
-    key: houseKey, references: ['door'],
-    description: `A heavy wooden door.`,
+    name: 'cabin door',
+    key: cabinKey, references: ['door'],
+    description: `A heavy wooden door, a faded pale hue forming a jagged shape that fits well enough on its frame.`,
     unlockDescription: `Putting the key on the door lock and clicking it in place the door is now unlocked. You're able to go outside.`
 });
-door.opened = () => {
+door.opened = (key) => {
+    if (key) {
+        return door.placed(key);
+    }
     return `You try pulling on the doornob but it won't move, it seems to be locked.`;
 }
 door.placed = (item) => {
     let resultDescription = `You try to fit the ` + item.name + ` but it doesn't quite work.`;
     let unlocked = false;
     if (item.name == door.key.name) {
-        houseInside.neighbourAreas.push(
+        cabinInside.neighbourAreas.push(
             new AreaConnection({
-                areaObject: houseOutside,
+                areaObject: sampleEnd,
                 distance: 2,
                 references: ['outside', 'door'],
                 description: `You open the door and step outside.`
@@ -69,7 +75,7 @@ door.placed = (item) => {
     return [unlocked, resultDescription];
 }
 
-const window = new GameObject({name: 'window', description: 'A window, covered by wooden shudders.'});
+const window = new GameObject({name: 'window', references: ['shudders'], description: 'A window, covered by wooden shudders.'});
 window.state = 'closed';
 window.opened = () => {
     if (window.state == 'opened'){
@@ -77,7 +83,7 @@ window.opened = () => {
     }
     window.state = 'opened';
     window.description = `An open window. Looking out of it you can see a grass patch of land, shortly blocked by a tall stone wall that seems to go from edge to edge outside of your view.`;
-    return `You pull the shudders, opening the window. Looking out of it you can see a grass patch of land, shortly blocked by a tall stone wall that seems to go from edge to edge outside of your view.`
+    return window.getDescription();
 }
 window.closed = () => {
     if (window.state == 'closed'){
@@ -87,12 +93,38 @@ window.closed = () => {
     window.description = `A window, covered by wooden shudders.`;
     return `You push the shuuders back, closing the window.`
 }
-
-const desk = new Container({name: 'desk', references: ['wooden desk'], description: `A wodden desk with a drawer, the rough boards seem worn with time.`});
+window.getDescription = () => {
+    let response = window.description;
+    let dayState = gameState.getDayStateSimple();
+    const descriptionVariables = {
+        'closed' : {
+            'light' : {
+                'day' : `From within the planks small rays of sunlight are visible.`,
+                'night' : `You can feel it shake slightly from the wind.`,
+            }
+        },
+        'opened' : {
+            'light' : {
+                'day' : `You can hear the distand sound of nature, trees and birds.`,
+                'night' : `All bathed in moonlight, while the wind howls through all if it.`,
+            }
+        },
+    }
+    return response + ' ' + descriptionVariables[window.state]['light'][dayState];
+}
+const desk = new Container({name: 'desk', references: ['wooden desk'], description: `A wooden desk with a drawer, the rough boards seem worn with time.`});
 desk.climbed = () => {
     desk.climbedOn = true;
     hatch.description = `A hatch in the ceiling, a small string hangs from it.`;
     let response = `You climbed on top of the desk.`;
+    gameState.playerPosition = 'climbed desk';
+    cabinInside.neighbourAreas.push(new AreaConnection({
+        areaObject: cabinAttic,
+        references: ['hatch', 'ceiling', 'ceiling hatch', 'inside'],
+        distance: 2,
+        description: `From atop the desk you climb through the hatch into the attic.`,
+    }));
+    hatch.description = `A square hatch on the ceiling, leading to a barely lit space.`;
     if (!hatch.everSeen){
         response += ` You can see a hatch in the ceiling with small string hanging from it.`;
         hatch.everSeen = true;
@@ -103,16 +135,21 @@ desk.climbed = () => {
 const hatch = new GameObject({name: 'ceiling hatch', references: ['hatch'], description: 'A hatch in the ceiling, a small string hangs from it but it seems to high to reach.'});
 hatch.opened = () => {
     if (desk.climbedOn){
-        houseInside.neighbourAreas.push(new AreaConnection({
-            areaObject: houseAttic,
+        return `You reach for the string and pull it down, opening the hatch on the ceiling.`;
+    } else {
+        return `It's too high to reach.`;
+    }
+}
+hatch.climbed = () => {
+    if (desk.climbedOn){
+        cabinInside.neighbourAreas.push(new AreaConnection({
+            areaObject: cabinAttic,
+            references: ['hatch', 'ceiling', 'ceiling hatch', 'inside'],
             distance: 2,
             description: `From atop the desk you climb through the hatch into the attic.`,
         }));
-        hatch.climbed = () => {
-            go.execute(['hatch']);
-        }
         hatch.description = `A square hatch on the ceiling, leading to a barely lit space.`;
-        return `You reach for the string and pull it down, opening the hatch on the ceiling.`;
+        go.execute(['hatch']);
     } else {
         return `It's too high to reach.`;
     }
@@ -128,5 +165,6 @@ bed.layedOn = () => {
     return response + '.';
 }
 
+const wall = new GameObject({name: 'wall', description: 'A wooden wall, just as most things around. Its planks run from side to side, each with its own deformities, cracks and imperfections.'});
 
-houseInside.startWith([desk, drawer, ground, ceiling, door, hatch, bed, window]);
+cabinInside.startWith([desk, drawer, ground, ceiling, door, hatch, bed, window, wall]);
