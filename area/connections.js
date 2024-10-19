@@ -14,14 +14,14 @@ cabinAttic.neighbourAreas = [
     }),
 ]
 
-sampleEnd.neighbourAreas = [
-    new AreaConnection({
-        areaObject: cabinInside,
-        references: ['inside', 'cabin'],
-        distance: 1,
-        description: `You walk back into the cabin.`,
-    }),
-]
+// sampleEnd.neighbourAreas = [
+//     new AreaConnection({
+//         areaObject: cabinInside,
+//         references: ['inside', 'cabin'],
+//         distance: 1,
+//         description: `You walk back into the cabin.`,
+//     }),
+// ]
 
 cabinOutside.neighbourAreas = [
     new AreaConnection({
