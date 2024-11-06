@@ -1,8 +1,7 @@
 import { findObjectGeneral } from "./commands/commands.js";
-import { cabinInside } from "./area/instances/cabinInside.js";
 
 export const gameState = {
-    currentArea: cabinInside,
+    currentArea: null,
     pausedFrom: null,
     inventory: [],
     globalTime: 329,

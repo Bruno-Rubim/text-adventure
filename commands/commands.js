@@ -1,4 +1,3 @@
-import { menu } from "../area/instances/menu.js";
 import { upView } from "../gameObjects/upView.js";
 import { gameState } from "../gameState.js";
 import * as terminal from "../screen/terminal.js";

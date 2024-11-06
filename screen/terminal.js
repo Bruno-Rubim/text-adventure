@@ -164,4 +164,4 @@ input.addEventListener("keyup", function(event) {
     }
 });
 
-addTextToScreenQueue(`Welcome to<h1 > GAME NAME </h1> Type HELP and hit ENTER for command list!`);
+addTextToScreenQueue(`Welcome to<h1 >  </h1> Type HELP and hit ENTER for command list!`);
